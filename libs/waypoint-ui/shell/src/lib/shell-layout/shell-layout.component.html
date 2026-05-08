@@ -1,33 +1,57 @@
 <mat-sidenav-container class="waypoint-shell">
-  <mat-sidenav mode="side" opened class="waypoint-shell__nav">
+  <mat-sidenav
+    mode="side"
+    opened
+    class="waypoint-shell__nav"
+  >
     <div class="brand">
-      <div class="brand__mark">W</div>
-      <div>
+      <div class="brand__mark">
+        W
+      </div>
+
+      <div class="brand__content">
         <strong>Waypoint MX</strong>
-        <small>Maintenance control</small>
+
+        <small>
+          Maintenance control
+        </small>
       </div>
     </div>
 
-    <nav>
-      <a routerLink="/app/dashboard" routerLinkActive="active">Dashboard</a>
-      <a>Aircraft</a>
-      <a>Defects</a>
-      <a>Maintenance</a>
-      <a>Documents</a>
-      <a>Compliance</a>
-      <a>Admin</a>
-    </nav>
+    <mat-nav-list>
+      @for (item of navItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active-link"
+        >
+          <mat-icon matListItemIcon>
+            {{ item.icon }}
+          </mat-icon>
+
+          <span matListItemTitle>
+            {{ item.label }}
+          </span>
+        </a>
+      }
+    </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <mat-toolbar class="waypoint-shell__toolbar">
-      <span>Waypoint Operations</span>
+      <span>
+        Waypoint Operations
+      </span>
+
       <span class="spacer"></span>
-      <span class="org-pill">Waypoint Aviation Ltd</span>
+
+      <span class="org-pill">
+        Waypoint Aviation Ltd
+      </span>
     </mat-toolbar>
 
     <main class="waypoint-shell__content">
-      <router-outlet></router-outlet>
+      <router-outlet />
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -20,7 +20,10 @@
             "input": "apps/waypoint-ui/public"
           }
         ],
-        "styles": ["apps/waypoint-ui/src/styles.scss"]
+        "styles": ["apps/waypoint-ui/src/styles.scss"],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/theme/src"]
+        }
       },
       "configurations": {
         "production": {

@@ -1,0 +1,97 @@
+//
+// Generic status pill
+//
+
+.wp-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  border: 1px solid transparent;
+}
+
+//
+// Aircraft / compliance states
+//
+
+.wp-status--compliant {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.wp-status--attention {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+
+.wp-status--non-compliant {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+//
+// Defect severity
+//
+
+.wp-status--critical {
+  color: #7f1d1d;
+  background: #fecaca;
+  border-color: #f87171;
+}
+
+.wp-status--major {
+  color: #9a3412;
+  background: #fed7aa;
+  border-color: #fb923c;
+}
+
+.wp-status--minor {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+//
+// Maintenance event states
+//
+
+.wp-status--due-soon {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+
+.wp-status--overdue {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.wp-status--scheduled {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #5eead4;
+}
+
+//
+// Neutral
+//
+
+.wp-status--draft {
+  color: #475569;
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}

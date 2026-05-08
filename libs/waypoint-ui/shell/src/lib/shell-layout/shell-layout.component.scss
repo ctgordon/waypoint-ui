@@ -1,0 +1,117 @@
+.waypoint-shell {
+  height: 100vh;
+}
+
+.waypoint-shell__nav {
+  width: 18rem;
+
+  border-right: 1px solid var(--wp-border);
+
+  background: var(--wp-surface);
+}
+
+.waypoint-shell__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  border-bottom: 1px solid var(--wp-border);
+
+  background: var(--wp-surface);
+}
+
+.waypoint-shell__content {
+  padding: 2rem;
+
+  background: var(--wp-background);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1.5rem;
+
+  border-bottom: 1px solid var(--wp-border);
+}
+
+.brand__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    var(--wp-primary, #12324a),
+    var(--wp-primary-light, #1f4d6b)
+  );
+
+  color: white;
+
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.brand__content {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: 1rem;
+  }
+
+  small {
+    color: var(--wp-muted);
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.org-pill {
+  padding: 0.35rem 0.75rem;
+
+  border-radius: 999px;
+
+  background: var(--wp-primary-soft);
+
+  color: var(--wp-primary);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.active-link {
+  background: rgba(18, 50, 74, 0.08);
+
+  border-radius: 12px;
+
+  color: var(--wp-primary);
+
+  font-weight: 600;
+}
+
+mat-nav-list {
+  padding: 1rem;
+}
+
+a[mat-list-item] {
+  margin-bottom: 0.35rem;
+
+  border-radius: 12px;
+
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+
+  &:hover {
+    background: rgba(18, 50, 74, 0.05);
+  }
+}

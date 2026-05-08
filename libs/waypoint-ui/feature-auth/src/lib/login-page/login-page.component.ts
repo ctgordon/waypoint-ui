@@ -6,6 +6,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TokenStorageService } from '@waypoint-ui/shared-util-auth';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { response } from 'express';
 
 type TokenResponse = {
   accessToken: string;
@@ -15,7 +22,13 @@ type TokenResponse = {
 @Component({
   selector: 'lib-login-page',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
@@ -23,6 +36,13 @@ export class LoginPageComponent {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly tokenStorage = inject(TokenStorageService);
+
+  loginForm: FormGroup = new FormGroup({
+    emailFormControl: new FormControl('', [
+      Validators.required,
+      Validators.email,
+    ]),
+  });
 
   signIn(): void {
     this.http
@@ -34,5 +54,9 @@ export class LoginPageComponent {
         this.tokenStorage.setAccessToken(response.accessToken);
         this.router.navigateByUrl('/app/dashboard');
       });
+  }
+
+  get emailFormControl(): FormControl {
+    return this.loginForm.get('emailFormControl') as FormControl;
   }
 }
