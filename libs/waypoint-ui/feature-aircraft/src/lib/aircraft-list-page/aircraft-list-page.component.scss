@@ -1,0 +1,75 @@
+.aircraft-list__header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    color: var(--wp-muted);
+  }
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--wp-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aircraft-card-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.aircraft-card {
+  height: 100%;
+  border: 1px solid var(--wp-border);
+  box-shadow: none;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.75rem 2rem rgba(16, 42, 67, 0.08);
+  }
+}
+
+.aircraft-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: var(--wp-muted);
+  }
+}
+
+dl {
+  margin: 1.25rem 0 0;
+}
+
+dt {
+  color: var(--wp-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}

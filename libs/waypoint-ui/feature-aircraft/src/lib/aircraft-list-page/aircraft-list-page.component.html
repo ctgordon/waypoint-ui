@@ -1,0 +1,36 @@
+<section class="aircraft-list">
+  <header class="aircraft-list__header">
+    <p class="eyebrow">Fleet</p>
+    <h1>Aircraft</h1>
+    <p>View aircraft records, defects, documents, and maintenance status.</p>
+  </header>
+
+  <div class="row g-3">
+    <div
+      class="col-12 col-md-6 col-xl-4"
+      *ngFor="let item of aircraft$ | async"
+    >
+      <a class="aircraft-card-link" [routerLink]="item.aircraftId">
+        <mat-card class="aircraft-card">
+          <mat-card-content>
+            <div class="aircraft-card__top">
+              <div>
+                <h2>{{ item.registration }}</h2>
+                <p>{{ item.manufacturer }} {{ item.model }}</p>
+              </div>
+
+              <mat-chip>{{ item.status }}</mat-chip>
+            </div>
+
+            <dl>
+              <div>
+                <dt>Serial</dt>
+                <dd>{{ item.serialNumber || 'Not recorded' }}</dd>
+              </div>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    </div>
+  </div>
+</section>
