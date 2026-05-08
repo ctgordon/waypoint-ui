@@ -1,0 +1,58 @@
+<wp-section-panel
+  title="Defects"
+  description="Open and recently reported aircraft defects."
+>
+  @if (defects$ | async; as defects) {
+    <ng-container>
+      @if (defects.length === 0) {
+        <wp-empty-state
+          icon="task_alt"
+          title="No defects recorded"
+          message="This aircraft has no current defects."
+        />
+      }
+
+      @if (defects.length > 0) {
+        <div
+          class="defect-list"
+        >
+          @for (defect of defects; track defect.defectId) {
+            <article
+              class="defect-item"
+            >
+              <div class="defect-item__main">
+                <div>
+                  <h3>
+                    {{ defect.title }}
+                  </h3>
+
+                  @if (defect.description) {
+                    <p>
+                      {{ defect.description }}
+                    </p>
+                  }
+
+                  <small>
+                    Reported {{ defect.reportedAt | date: 'mediumDate' }}
+                  </small>
+                </div>
+
+                <div class="defect-item__status">
+                  <wp-status-pill
+                    [label]="formatLabel(defect.severity)"
+                    [tone]="severityTone(defect.severity)"
+                  />
+
+                  <wp-status-pill
+                    [label]="formatLabel(defect.status)"
+                    [tone]="statusTone(defect.status)"
+                  />
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </ng-container>
+  }
+</wp-section-panel>

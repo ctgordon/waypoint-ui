@@ -6,11 +6,19 @@ import { MatChipsModule } from '@angular/material/chips';
 import { map, switchMap } from 'rxjs';
 
 import { AircraftApiService } from '@waypoint-ui/shared-data-access';
+import { AircraftDefectsPanelComponent } from '../aircraft-defects-panel/aircraft-defects-panel.component';
 
 @Component({
   selector: 'lib-aircraft-detail-page',
   standalone: true,
-  imports: [AsyncPipe, NgIf, RouterLink, MatCardModule, MatChipsModule],
+  imports: [
+    AsyncPipe,
+    NgIf,
+    RouterLink,
+    MatCardModule,
+    MatChipsModule,
+    AircraftDefectsPanelComponent,
+  ],
   templateUrl: './aircraft-detail-page.component.html',
   styleUrl: './aircraft-detail-page.component.scss',
 })
