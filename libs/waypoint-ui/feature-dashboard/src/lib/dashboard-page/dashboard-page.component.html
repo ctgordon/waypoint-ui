@@ -1,9 +1,18 @@
-<section class="dashboard">
+<section
+  class="dashboard"
+  *ngIf="summary$ | async as summary"
+>
   <header class="dashboard__header">
     <div>
       <p class="eyebrow">Fleet overview</p>
-      <h1>Good morning, Chris</h1>
-      <p>Here’s the current maintenance and compliance picture.</p>
+
+      <h1>
+        {{ summary.organisationName }}
+      </h1>
+
+      <p>
+        Current operational maintenance and compliance status.
+      </p>
     </div>
   </header>
 
@@ -12,7 +21,7 @@
       <mat-card>
         <mat-card-content>
           <p>Total aircraft</p>
-          <h2>2</h2>
+          <h2>{{ summary.totalAircraft }}</h2>
         </mat-card-content>
       </mat-card>
     </div>
@@ -21,7 +30,7 @@
       <mat-card>
         <mat-card-content>
           <p>Open defects</p>
-          <h2>3</h2>
+          <h2>{{ summary.openDefects }}</h2>
         </mat-card-content>
       </mat-card>
     </div>
@@ -30,7 +39,7 @@
       <mat-card>
         <mat-card-content>
           <p>Due soon</p>
-          <h2>3</h2>
+          <h2>{{ summary.dueSoonCount }}</h2>
         </mat-card-content>
       </mat-card>
     </div>
@@ -39,7 +48,7 @@
       <mat-card>
         <mat-card-content>
           <p>Non-compliant</p>
-          <h2>1</h2>
+          <h2>{{ summary.nonCompliantAircraft }}</h2>
         </mat-card-content>
       </mat-card>
     </div>
