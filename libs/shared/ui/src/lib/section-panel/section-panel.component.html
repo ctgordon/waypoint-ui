@@ -1,0 +1,23 @@
+<mat-card class="wp-section-panel">
+  <mat-card-content>
+    <header class="wp-section-panel__header">
+      <div>
+        <h2>
+          {{ title }}
+        </h2>
+
+        @if (description) {
+          <p>
+            {{ description }}
+          </p>
+        }
+      </div>
+
+      <ng-content select="[panel-actions]" />
+    </header>
+
+    <div class="wp-section-panel__content">
+      <ng-content />
+    </div>
+  </mat-card-content>
+</mat-card>

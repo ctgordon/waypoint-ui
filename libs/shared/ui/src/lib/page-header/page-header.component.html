@@ -1,0 +1,17 @@
+<header class="wp-page-header">
+  @if (eyebrow) {
+    <p class="wp-page-header__eyebrow">
+      {{ eyebrow }}
+    </p>
+  }
+
+  <h1>
+    {{ title }}
+  </h1>
+
+  @if (description) {
+    <p class="wp-page-header__description">
+      {{ description }}
+    </p>
+  }
+</header>

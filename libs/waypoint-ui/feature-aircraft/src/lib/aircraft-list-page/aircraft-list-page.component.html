@@ -1,9 +1,9 @@
 <section class="aircraft-list">
-  <header class="aircraft-list__header">
-    <p class="eyebrow">Fleet</p>
-    <h1>Aircraft</h1>
-    <p>View aircraft records, defects, documents, and maintenance status.</p>
-  </header>
+  <wp-page-header
+    eyebrow="Fleet"
+    title="Aircraft"
+    description="View aircraft records, defects, documents, and maintenance status."
+  />
 
   <div class="row g-3">
     <div
@@ -19,7 +19,10 @@
                 <p>{{ item.manufacturer }} {{ item.model }}</p>
               </div>
 
-              <mat-chip>{{ item.status }}</mat-chip>
+              <wp-status-pill
+                [label]="item.status"
+                tone="scheduled"
+              />
             </div>
 
             <dl>

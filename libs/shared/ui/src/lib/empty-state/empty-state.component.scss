@@ -1,0 +1,29 @@
+.wp-empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  padding: 2rem;
+
+  border: 1px dashed var(--wp-border);
+  border-radius: var(--wp-radius);
+
+  color: var(--wp-muted);
+  text-align: center;
+
+  mat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--wp-accent);
+    font-size: 2.5rem;
+  }
+
+  strong {
+    color: var(--wp-text);
+  }
+
+  p {
+    max-width: 26rem;
+    margin: 0.35rem 0 0;
+  }
+}

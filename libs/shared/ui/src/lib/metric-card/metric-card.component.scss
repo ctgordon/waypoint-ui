@@ -1,0 +1,29 @@
+.wp-metric-card {
+  height: 100%;
+  border: 1px solid var(--wp-border);
+  box-shadow: none;
+}
+
+.wp-metric-card__label {
+  margin: 0;
+  color: var(--wp-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wp-metric-card__value {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--wp-text);
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.wp-metric-card__hint {
+  margin: 0.5rem 0 0;
+  color: var(--wp-muted);
+  font-size: 0.9rem;
+}

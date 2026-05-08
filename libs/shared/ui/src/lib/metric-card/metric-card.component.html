@@ -1,0 +1,17 @@
+<mat-card class="wp-metric-card">
+  <mat-card-content>
+    <p class="wp-metric-card__label">
+      {{ label }}
+    </p>
+
+    <strong class="wp-metric-card__value">
+      {{ value }}
+    </strong>
+
+    @if (hint) {
+      <p class="wp-metric-card__hint">
+        {{ hint }}
+      </p>
+    }
+  </mat-card-content>
+</mat-card>

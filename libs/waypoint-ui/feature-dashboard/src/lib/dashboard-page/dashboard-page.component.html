@@ -1,56 +1,39 @@
-<section
-  class="dashboard"
-  *ngIf="summary$ | async as summary"
->
-  <header class="dashboard__header">
-    <div>
-      <p class="eyebrow">Fleet overview</p>
+@if (summary$ | async; as summary) {
+  <section>
+    <wp-page-header
+      eyebrow="Fleet overview"
+      [title]="summary.organisationId"
+      description="Current operational maintenance and compliance status."
+    />
 
-      <h1>
-        {{ summary.organisationName }}
-      </h1>
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <wp-metric-card
+          label="Total aircraft"
+          [value]="summary.totalAircraft"
+        />
+      </div>
 
-      <p>
-        Current operational maintenance and compliance status.
-      </p>
+      <div class="col-12 col-md-3">
+        <wp-metric-card
+          label="Open defects"
+          [value]="summary.openDefects"
+        />
+      </div>
+
+      <div class="col-12 col-md-3">
+        <wp-metric-card
+          label="Due soon"
+          [value]="summary.openDefects"
+        />
+      </div>
+
+      <div class="col-12 col-md-3">
+        <wp-metric-card
+          label="In progress defects"
+          [value]="summary.openDefects"
+        />
+      </div>
     </div>
-  </header>
-
-  <div class="row g-3">
-    <div class="col-12 col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <p>Total aircraft</p>
-          <h2>{{ summary.totalAircraft }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="col-12 col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <p>Open defects</p>
-          <h2>{{ summary.openDefects }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="col-12 col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <p>Due soon</p>
-          <h2>{{ summary.dueSoonCount }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="col-12 col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <p>Non-compliant</p>
-          <h2>{{ summary.nonCompliantAircraft }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-</section>
+  </section>
+}
