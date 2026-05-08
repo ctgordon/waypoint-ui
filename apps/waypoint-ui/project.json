@@ -1,0 +1,76 @@
+{
+  "name": "waypoint-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/waypoint-ui/src",
+  "tags": ["type:app", "scope:waypoint-ui"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/waypoint-ui",
+        "browser": "apps/waypoint-ui/src/main.ts",
+        "tsConfig": "apps/waypoint-ui/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/waypoint-ui/public"
+          }
+        ],
+        "styles": ["apps/waypoint-ui/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "waypoint-ui:build:production"
+        },
+        "development": {
+          "buildTarget": "waypoint-ui:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "waypoint-ui:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/waypoint-ui/browser",
+        "spa": true
+      }
+    }
+  }
+}

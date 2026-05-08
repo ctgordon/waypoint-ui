@@ -15,14 +15,19 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@org/api/products": ["libs/api/products/src/index.ts"],
-      "@org/models": ["libs/shared/models/src/index.ts"],
-      "@org/shop/data": ["libs/shop/data/src/index.ts"],
-      "@org/shop/feature-product-detail": [
-        "libs/shop/feature-product-detail/src/index.ts"
+      "@waypoint-ui/shell": ["libs/waypoint-ui/shell/src/index.ts"],
+      "@waypoint-ui/feature-auth": [
+        "libs/waypoint-ui/feature-auth/src/index.ts"
       ],
-      "@org/shop/feature-products": ["libs/shop/feature-products/src/index.ts"],
-      "@org/shop/shared-ui": ["libs/shop/shared-ui/src/index.ts"]
+      "@waypoint-ui/feature-dashboard": [
+        "libs/waypoint-ui/feature-dashboard/src/index.ts"
+      ],
+      "@waypoint-ui/shared-ui": ["libs/shared/ui/src/index.ts"],
+      "@waypoint-ui/shared-data-access": [
+        "libs/shared/data-access/src/index.ts"
+      ],
+      "@waypoint-ui/shared-models": ["libs/shared/models/src/index.ts"],
+      "@waypoint-ui/shared-util-auth": ["libs/shared/util-auth/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

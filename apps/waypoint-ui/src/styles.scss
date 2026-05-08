@@ -1,0 +1,24 @@
+@import 'bootstrap/scss/bootstrap';
+
+:root {
+  --wp-bg: #f5f7fa;
+  --wp-surface: #ffffff;
+  --wp-border: #d9e2ec;
+  --wp-primary: #12324a;
+  --wp-primary-soft: #e8f0f7;
+  --wp-accent: #2f7d8c;
+  --wp-text: #17212b;
+  --wp-muted: #667085;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--wp-bg);
+  color: var(--wp-text);
+  font-family: Roboto, Arial, sans-serif;
+}

@@ -1,0 +1,50 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  background: #f5f7fa;
+}
+
+.login-page__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(47, 125, 140, 0.18), transparent 32rem),
+    linear-gradient(135deg, #102a43, #12324a);
+  color: white;
+
+  h1 {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 3rem;
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    max-width: 34rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.15rem;
+  }
+}
+
+.brand-mark {
+  width: 4rem;
+  height: 4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.14);
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.login-page__panel {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.login-card {
+  width: min(100%, 28rem);
+}
