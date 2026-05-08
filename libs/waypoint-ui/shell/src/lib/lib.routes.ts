@@ -18,6 +18,13 @@ export const shellRoutes: Routes = [
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
+      {
+        path: 'aircraft',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-aircraft').then(
+            (m) => m.featureAircraftRoutes,
+          ),
+      },
     ],
   },
 ];
