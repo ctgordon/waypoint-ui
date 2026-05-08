@@ -1,52 +1,48 @@
-<section class="aircraft-detail" *ngIf="aircraft$ | async as aircraft">
-  <a routerLink="../" class="back-link">← Back to aircraft</a>
+@if (aircraft$ | async; as aircraft) {
+  <section class="aircraft-detail">
+    <a routerLink="../" class="back-link">← Back to aircraft</a>
 
-  <header class="aircraft-detail__header">
-    <div>
-      <p class="eyebrow">Aircraft detail</p>
-      <h1>{{ aircraft.registration }}</h1>
-      <p>{{ aircraft.manufacturer }} {{ aircraft.model }}</p>
+    <header class="aircraft-detail__header">
+      <div>
+        <p class="eyebrow">Aircraft detail</p>
+        <h1>{{ aircraft.registration }}</h1>
+        <p>{{ aircraft.manufacturer }} {{ aircraft.model }}</p>
+      </div>
+
+      <mat-chip>{{ aircraft.status }}</mat-chip>
+    </header>
+
+    <div class="row g-3">
+      <div class="col-12 col-lg-4">
+        <mat-card>
+          <mat-card-content>
+            <h2>Aircraft record</h2>
+
+            <dl>
+              <div>
+                <dt>Aircraft ID</dt>
+                <dd>{{ aircraft.aircraftId }}</dd>
+              </div>
+
+              <div>
+                <dt>Organisation</dt>
+                <dd>{{ aircraft.organisationId }}</dd>
+              </div>
+
+              <div>
+                <dt>Serial number</dt>
+                <dd>{{ aircraft.serialNumber || 'Not recorded' }}</dd>
+              </div>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-12 col-lg-8">
+        <wp-aircraft-defects-panel
+          [aircraftId]="aircraft.aircraftId"
+        />
+      </div>
     </div>
-
-    <mat-chip>{{ aircraft.status }}</mat-chip>
-  </header>
-
-  <div class="row g-3">
-    <div class="col-12 col-lg-4">
-      <mat-card>
-        <mat-card-content>
-          <h2>Aircraft record</h2>
-
-          <dl>
-            <div>
-              <dt>Aircraft ID</dt>
-              <dd>{{ aircraft.aircraftId }}</dd>
-            </div>
-
-            <div>
-              <dt>Organisation</dt>
-              <dd>{{ aircraft.organisationId }}</dd>
-            </div>
-
-            <div>
-              <dt>Serial number</dt>
-              <dd>{{ aircraft.serialNumber || 'Not recorded' }}</dd>
-            </div>
-          </dl>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="col-12 col-lg-8">
-      <mat-card>
-        <mat-card-content>
-          <h2>Operational panels</h2>
-          <p class="muted">
-            Next we’ll add live defects, maintenance events, documents, and
-            compliance panels here.
-          </p>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-</section>
+  </section>
+}

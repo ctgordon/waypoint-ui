@@ -14,6 +14,22 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: ['wp', 'lib'],
+          style: 'kebab-case',
+        },
+      ],
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: ['wp', 'lib'],
+          style: 'camelCase',
+        },
+      ],
       '@nx/enforce-module-boundaries': [
         'error',
         {

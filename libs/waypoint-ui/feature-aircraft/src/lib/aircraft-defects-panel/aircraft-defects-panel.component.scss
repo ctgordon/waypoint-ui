@@ -1,0 +1,44 @@
+.defect-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.defect-item {
+  padding: 1rem;
+
+  border: 1px solid var(--wp-border);
+  border-radius: var(--wp-radius);
+
+  background: var(--wp-surface);
+}
+
+.defect-item__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: var(--wp-muted);
+  }
+
+  small {
+    display: inline-block;
+    margin-top: 0.6rem;
+    color: var(--wp-muted);
+  }
+}
+
+.defect-item__status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

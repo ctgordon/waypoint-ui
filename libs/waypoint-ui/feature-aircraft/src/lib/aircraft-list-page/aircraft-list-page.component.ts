@@ -5,11 +5,20 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { AircraftApiService } from '@waypoint-ui/shared-data-access';
+import { PageHeaderComponent, StatusPillComponent } from '@waypoint-ui/shared-ui';
 
 @Component({
   selector: 'lib-aircraft-list-page',
   standalone: true,
-  imports: [AsyncPipe, NgFor, RouterLink, MatCardModule, MatChipsModule],
+  imports: [
+    AsyncPipe,
+    NgFor,
+    RouterLink,
+    MatCardModule,
+    MatChipsModule,
+    PageHeaderComponent,
+    StatusPillComponent,
+  ],
   templateUrl: './aircraft-list-page.component.html',
   styleUrl: './aircraft-list-page.component.scss',
 })
