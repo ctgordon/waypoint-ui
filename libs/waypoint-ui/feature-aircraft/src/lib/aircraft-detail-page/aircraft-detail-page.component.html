@@ -39,9 +39,11 @@
       </div>
 
       <div class="col-12 col-lg-8">
-        <wp-aircraft-defects-panel
-          [aircraftId]="aircraft.aircraftId"
-        />
+        <div class="aircraft-detail__stack">
+          <wp-aircraft-defects-panel [aircraftId]="aircraft.aircraftId" />
+
+          <wp-aircraft-maintenance-panel [aircraftId]="aircraft.aircraftId" />
+        </div>
       </div>
     </div>
   </section>

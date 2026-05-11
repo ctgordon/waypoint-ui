@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -7,17 +7,18 @@ import { map, switchMap } from 'rxjs';
 
 import { AircraftApiService } from '@waypoint-ui/shared-data-access';
 import { AircraftDefectsPanelComponent } from '../aircraft-defects-panel/aircraft-defects-panel.component';
+import { AircraftMaintenancePanelComponent } from '../aircraft-maintenance-panel/aircraft-maintenance-panel.component';
 
 @Component({
   selector: 'lib-aircraft-detail-page',
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
     RouterLink,
     MatCardModule,
     MatChipsModule,
     AircraftDefectsPanelComponent,
+    AircraftMaintenancePanelComponent,
   ],
   templateUrl: './aircraft-detail-page.component.html',
   styleUrl: './aircraft-detail-page.component.scss',

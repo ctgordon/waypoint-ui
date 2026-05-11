@@ -1,18 +1,30 @@
 import nx from '@nx/eslint-plugin';
+import angular from 'angular-eslint';
 
 export default [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
+
   {
     ignores: [
       '**/dist',
+      '**/.angular',
+      '**/.nx',
+      '**/node_modules',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
     ],
   },
+
+  ...angular.configs.tsRecommended.map((config) => ({
+    ...config,
+    files: ['**/*.ts'],
+  })),
+
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    files: ['**/*.ts'],
+    processor: angular.processInlineTemplates,
     rules: {
       '@angular-eslint/component-selector': [
         'error',
@@ -87,17 +99,9 @@ export default [
       ],
     },
   },
-  {
-    files: [
-      '**/*.ts',
-      '**/*.tsx',
-      '**/*.cts',
-      '**/*.mts',
-      '**/*.js',
-      '**/*.jsx',
-      '**/*.cjs',
-      '**/*.mjs',
-    ],
-    rules: {},
-  },
+
+  ...angular.configs.templateRecommended.map((config) => ({
+    ...config,
+    files: ['**/*.html'],
+  })),
 ];
