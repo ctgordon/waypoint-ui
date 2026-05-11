@@ -1,11 +1,17 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { MaintenanceApiService } from '@waypoint-ui/shared-data-access';
+import {
+  ApiViewState,
+  MaintenanceApiService,
+  toApiViewState,
+} from '@waypoint-ui/shared-data-access';
 import { MaintenanceEventSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
+  ErrorStateComponent,
+  LoadingStateComponent,
   SectionPanelComponent,
   StatusPillComponent,
   WaypointStatusTone,
@@ -17,9 +23,9 @@ import {
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     EmptyStateComponent,
+    ErrorStateComponent,
+    LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
   ],
@@ -29,16 +35,14 @@ import {
 export class AircraftMaintenancePanelComponent {
   private readonly maintenanceApi = inject(MaintenanceApiService);
 
-  events$: Observable<MaintenanceEventSummary[]> = of([]);
+  viewState$: Observable<ApiViewState<MaintenanceEventSummary[]>> =
+    toApiViewState(of([]));
 
   @Input({ required: true })
   set aircraftId(value: string) {
-    if (!value) {
-      this.events$ = of([]);
-      return;
-    }
-
-    this.events$ = this.maintenanceApi.listForAircraft(value);
+    this.viewState$ = toApiViewState(
+      value ? this.maintenanceApi.listForAircraft(value) : of([]),
+    );
   }
 
   statusTone(status: string): WaypointStatusTone {
@@ -58,41 +62,27 @@ export class AircraftMaintenancePanelComponent {
   }
 
   dueTone(dueDate: string | null): WaypointStatusTone {
-    if (!dueDate) {
-      return 'neutral';
-    }
+    if (!dueDate) return 'neutral';
 
-    const due = new Date(dueDate).getTime();
-    const now = Date.now();
-    const days = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil(
+      (new Date(dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    );
 
-    if (days < 0) {
-      return 'overdue';
-    }
-
-    if (days <= 30) {
-      return 'due-soon';
-    }
+    if (days < 0) return 'overdue';
+    if (days <= 30) return 'due-soon';
 
     return 'scheduled';
   }
 
   dueLabel(dueDate: string | null): string {
-    if (!dueDate) {
-      return 'No due date';
-    }
+    if (!dueDate) return 'No due date';
 
-    const due = new Date(dueDate).getTime();
-    const now = Date.now();
-    const days = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil(
+      (new Date(dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    );
 
-    if (days < 0) {
-      return `${Math.abs(days)} days overdue`;
-    }
-
-    if (days === 0) {
-      return 'Due today';
-    }
+    if (days < 0) return `${Math.abs(days)} days overdue`;
+    if (days === 0) return 'Due today';
 
     return `Due in ${days} days`;
   }

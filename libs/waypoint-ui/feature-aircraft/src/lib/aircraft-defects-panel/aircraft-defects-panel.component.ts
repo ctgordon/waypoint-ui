@@ -1,15 +1,20 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { MatDividerModule } from '@angular/material/divider';
+import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { Component, Input, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { DefectsApiService } from '@waypoint-ui/shared-data-access';
+import {
+  DefectsApiService,
+  ApiViewState,
+  toApiViewState,
+} from '@waypoint-ui/shared-data-access';
 import { DefectSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
+  ErrorStateComponent,
+  LoadingStateComponent,
   SectionPanelComponent,
   StatusPillComponent,
-  WaypointStatusTone
+  WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
 
 @Component({
@@ -18,8 +23,11 @@ import {
   imports: [
     AsyncPipe,
     DatePipe,
-    MatDividerModule,
+    NgFor,
+    NgIf,
     EmptyStateComponent,
+    ErrorStateComponent,
+    LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
   ],
@@ -29,16 +37,15 @@ import {
 export class AircraftDefectsPanelComponent {
   private readonly defectsApi = inject(DefectsApiService);
 
-  defects$: Observable<DefectSummary[]> = of([]);
+  viewState$: Observable<ApiViewState<DefectSummary[]>> = toApiViewState(
+    of([]),
+  );
 
   @Input({ required: true })
   set aircraftId(value: string) {
-    if (!value) {
-      this.defects$ = of([]);
-      return;
-    }
-
-    this.defects$ = this.defectsApi.listForAircraft(value);
+    this.viewState$ = toApiViewState(
+      value ? this.defectsApi.listForAircraft(value) : of([]),
+    );
   }
 
   severityTone(severity: string): WaypointStatusTone {

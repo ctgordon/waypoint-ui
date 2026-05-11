@@ -1,0 +1,12 @@
+.wp-loading-state {
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  padding: 2rem;
+  color: var(--wp-muted);
+  text-align: center;
+
+  p {
+    margin: 0.75rem 0 0;
+  }
+}

@@ -1,11 +1,17 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { DocumentsApiService } from '@waypoint-ui/shared-data-access';
+import {
+  ApiViewState,
+  DocumentsApiService,
+  toApiViewState,
+} from '@waypoint-ui/shared-data-access';
 import { AircraftDocumentSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
+  ErrorStateComponent,
+  LoadingStateComponent,
   SectionPanelComponent,
   StatusPillComponent,
   WaypointStatusTone,
@@ -17,9 +23,9 @@ import {
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     EmptyStateComponent,
+    ErrorStateComponent,
+    LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
   ],
@@ -29,16 +35,14 @@ import {
 export class AircraftDocumentsPanelComponent {
   private readonly documentsApi = inject(DocumentsApiService);
 
-  documents$: Observable<AircraftDocumentSummary[]> = of([]);
+  viewState$: Observable<ApiViewState<AircraftDocumentSummary[]>> =
+    toApiViewState(of([]));
 
   @Input({ required: true })
   set aircraftId(value: string) {
-    if (!value) {
-      this.documents$ = of([]);
-      return;
-    }
-
-    this.documents$ = this.documentsApi.listForAircraft(value);
+    this.viewState$ = toApiViewState(
+      value ? this.documentsApi.listForAircraft(value) : of([]),
+    );
   }
 
   statusTone(status: string): WaypointStatusTone {
@@ -58,41 +62,27 @@ export class AircraftDocumentsPanelComponent {
   }
 
   expiryTone(expiryDate: string | null): WaypointStatusTone {
-    if (!expiryDate) {
-      return 'neutral';
-    }
+    if (!expiryDate) return 'neutral';
 
-    const expiry = new Date(expiryDate).getTime();
-    const now = Date.now();
-    const days = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil(
+      (new Date(expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    );
 
-    if (days < 0) {
-      return 'overdue';
-    }
-
-    if (days <= 30) {
-      return 'due-soon';
-    }
+    if (days < 0) return 'overdue';
+    if (days <= 30) return 'due-soon';
 
     return 'scheduled';
   }
 
   expiryLabel(expiryDate: string | null): string {
-    if (!expiryDate) {
-      return 'No expiry';
-    }
+    if (!expiryDate) return 'No expiry';
 
-    const expiry = new Date(expiryDate).getTime();
-    const now = Date.now();
-    const days = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil(
+      (new Date(expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    );
 
-    if (days < 0) {
-      return `${Math.abs(days)} days expired`;
-    }
-
-    if (days === 0) {
-      return 'Expires today';
-    }
+    if (days < 0) return `${Math.abs(days)} days expired`;
+    if (days === 0) return 'Expires today';
 
     return `Expires in ${days} days`;
   }

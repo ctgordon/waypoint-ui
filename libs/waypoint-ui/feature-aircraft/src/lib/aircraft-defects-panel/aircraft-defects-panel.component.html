@@ -2,9 +2,20 @@
   title="Defects"
   description="Open and recently reported aircraft defects."
 >
-  @if (defects$ | async; as defects) {
-    <ng-container>
-      @if (defects.length === 0) {
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading defects..." />
+    }
+
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load defects"
+        message="Please refresh the page or try again later."
+      />
+    }
+
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
         <wp-empty-state
           icon="task_alt"
           title="No defects recorded"
@@ -12,24 +23,16 @@
         />
       }
 
-      @if (defects.length > 0) {
-        <div
-          class="defect-list"
-        >
-          @for (defect of defects; track defect.defectId) {
-            <article
-              class="defect-item"
-            >
+      @if (vm.data.length > 0) {
+        <div class="defect-list">
+          @for (defect of vm.data; track defect.defectId) {
+            <article class="defect-item">
               <div class="defect-item__main">
                 <div>
-                  <h3>
-                    {{ defect.title }}
-                  </h3>
+                  <h3>{{ defect.title }}</h3>
 
                   @if (defect.description) {
-                    <p>
-                      {{ defect.description }}
-                    </p>
+                    <p>{{ defect.description }}</p>
                   }
 
                   <small>
@@ -53,6 +56,6 @@
           }
         </div>
       }
-    </ng-container>
+    }
   }
 </wp-section-panel>

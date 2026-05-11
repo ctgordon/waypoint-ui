@@ -2,54 +2,76 @@
   title="Documents"
   description="Aircraft records, certificates, and expiry-sensitive documents."
 >
-  <ng-container *ngIf="documents$ | async as documents">
-    <wp-empty-state
-      *ngIf="documents.length === 0"
-      icon="description"
-      title="No documents recorded"
-      message="This aircraft does not have any document records yet."
-    />
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading documents..." />
+    }
 
-    <div class="document-list" *ngIf="documents.length > 0">
-      <article class="document-item" *ngFor="let document of documents">
-        <div class="document-item__main">
-          <div>
-            <h3>{{ document.title }}</h3>
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load documents"
+        message="Please refresh the page or try again later."
+      />
+    }
 
-            <p>
-              {{ formatLabel(document.documentType) }}
-              @if (document.reference) {
-                <span> · {{ document.reference }}</span>
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="description"
+          title="No documents recorded"
+          message="This aircraft does not have any document records yet."
+        />
+      }
+
+      @if (vm.data.length > 0) {
+        <div class="document-list">
+          @for (document of vm.data; track document.documentId) {
+            <article class="document-item">
+              <div class="document-item__main">
+                <div>
+                  <h3>{{ document.title }}</h3>
+
+                  <p>
+                    {{ formatLabel(document.documentType) }}
+
+                    @if (document.reference) {
+                      <span> · {{ document.reference }}</span>
+                    }
+                  </p>
+
+                  <small>
+                    Created {{ document.createdAt | date: 'mediumDate' }}
+
+                    @if (document.issueDate) {
+                      <span>
+                        · Issued {{ document.issueDate | date: 'mediumDate' }}
+                      </span>
+                    }
+                  </small>
+                </div>
+
+                <div class="document-item__status">
+                  <wp-status-pill
+                    [label]="formatLabel(document.status)"
+                    [tone]="statusTone(document.status)"
+                  />
+
+                  <wp-status-pill
+                    [label]="expiryLabel(document.expiryDate)"
+                    [tone]="expiryTone(document.expiryDate)"
+                  />
+                </div>
+              </div>
+
+              @if (document.notes) {
+                <p class="document-item__notes">
+                  {{ document.notes }}
+                </p>
               }
-            </p>
-
-            <small>
-              Created {{ document.createdAt | date: 'mediumDate' }}
-              @if (document.issueDate) {
-                <span> · Issued {{ document.issueDate | date: 'mediumDate' }}</span>
-              }
-            </small>
-          </div>
-
-          <div class="document-item__status">
-            <wp-status-pill
-              [label]="formatLabel(document.status)"
-              [tone]="statusTone(document.status)"
-            />
-
-            <wp-status-pill
-              [label]="expiryLabel(document.expiryDate)"
-              [tone]="expiryTone(document.expiryDate)"
-            />
-          </div>
+            </article>
+          }
         </div>
-
-        @if (document.notes) {
-          <p class="document-item__notes">
-            {{ document.notes }}
-          </p>
-        }
-      </article>
-    </div>
-  </ng-container>
+      }
+    }
+  }
 </wp-section-panel>

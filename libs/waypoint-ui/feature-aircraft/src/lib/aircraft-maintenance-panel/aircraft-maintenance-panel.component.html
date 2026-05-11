@@ -2,47 +2,65 @@
   title="Maintenance"
   description="Upcoming and active maintenance events for this aircraft."
 >
-  <ng-container *ngIf="events$ | async as events">
-    <wp-empty-state
-      *ngIf="events.length === 0"
-      icon="event_available"
-      title="No maintenance events"
-      message="This aircraft has no scheduled maintenance events."
-    />
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading maintenance events..." />
+    }
 
-    <div class="maintenance-list" *ngIf="events.length > 0">
-      <article class="maintenance-item" *ngFor="let event of events">
-        <div class="maintenance-item__main">
-          <div>
-            <h3>{{ event.title }}</h3>
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load maintenance events"
+        message="Please refresh the page or try again later."
+      />
+    }
 
-            <p *ngIf="event.notes">
-              {{ event.notes }}
-            </p>
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="event_available"
+          title="No maintenance events"
+          message="This aircraft has no scheduled maintenance events."
+        />
+      }
 
-            <small>
-              Created {{ event.createdAt | date: 'mediumDate' }}
-            </small>
-          </div>
+      @if (vm.data.length > 0) {
+        <div class="maintenance-list">
+          @for (event of vm.data; track event.eventId) {
+            <article class="maintenance-item">
+              <div class="maintenance-item__main">
+                <div>
+                  <h3>{{ event.title }}</h3>
 
-          <div class="maintenance-item__status">
-            <wp-status-pill
-              [label]="formatLabel(event.eventType)"
-              tone="neutral"
-            />
+                  @if (event.notes) {
+                    <p>{{ event.notes }}</p>
+                  }
 
-            <wp-status-pill
-              [label]="formatLabel(event.status)"
-              [tone]="statusTone(event.status)"
-            />
+                  <small>
+                    Created {{ event.createdAt | date: 'mediumDate' }}
+                  </small>
+                </div>
 
-            <wp-status-pill
-              [label]="dueLabel(event.dueDate)"
-              [tone]="dueTone(event.dueDate)"
-            />
-          </div>
+                <div class="maintenance-item__status">
+                  <wp-status-pill
+                    [label]="formatLabel(event.eventType)"
+                    tone="neutral"
+                  />
+
+                  <wp-status-pill
+                    [label]="formatLabel(event.status)"
+                    [tone]="statusTone(event.status)"
+                  />
+
+                  <wp-status-pill
+                    [label]="dueLabel(event.dueDate)"
+                    [tone]="dueTone(event.dueDate)"
+                  />
+                </div>
+              </div>
+            </article>
+          }
         </div>
-      </article>
-    </div>
-  </ng-container>
+      }
+    }
+  }
 </wp-section-panel>
