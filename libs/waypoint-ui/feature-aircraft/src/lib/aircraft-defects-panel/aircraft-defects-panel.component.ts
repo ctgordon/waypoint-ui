@@ -1,12 +1,8 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { Component, inject, Input } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import {
-  DefectsApiService,
-  ApiViewState,
-  toApiViewState,
-} from '@waypoint-ui/shared-data-access';
+import { ApiViewState, DefectsApiService, toApiViewState } from '@waypoint-ui/shared-data-access';
 import { DefectSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
@@ -14,8 +10,10 @@ import {
   LoadingStateComponent,
   SectionPanelComponent,
   StatusPillComponent,
-  WaypointStatusTone,
+  WaypointStatusTone
 } from '@waypoint-ui/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'wp-aircraft-defects-panel',
@@ -23,13 +21,13 @@ import {
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     EmptyStateComponent,
     ErrorStateComponent,
     LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
+    MatButton,
+    RouterLink,
   ],
   templateUrl: './aircraft-defects-panel.component.html',
   styleUrl: './aircraft-defects-panel.component.scss',
@@ -41,8 +39,12 @@ export class AircraftDefectsPanelComponent {
     of([]),
   );
 
+  aircraftIdValue = '';
+
   @Input({ required: true })
   set aircraftId(value: string) {
+    this.aircraftIdValue = value;
+
     this.viewState$ = toApiViewState(
       value ? this.defectsApi.listForAircraft(value) : of([]),
     );

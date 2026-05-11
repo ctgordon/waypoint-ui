@@ -2,6 +2,16 @@
   title="Defects"
   description="Open and recently reported aircraft defects."
 >
+
+  <a
+    panel-actions
+    mat-stroked-button
+    color="primary"
+    [routerLink]="['/app/aircraft', aircraftIdValue, 'defects', 'new']"
+  >
+    Report defect
+  </a>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading defects..." />
