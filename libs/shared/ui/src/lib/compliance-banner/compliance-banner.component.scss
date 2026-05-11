@@ -1,0 +1,72 @@
+.wp-compliance-banner {
+  display: flex;
+  gap: 1rem;
+
+  padding: 1.25rem;
+
+  border: 1px solid var(--wp-border);
+  border-radius: var(--wp-radius);
+
+  background: var(--wp-surface);
+}
+
+.wp-compliance-banner__icon {
+  display: grid;
+  place-items: center;
+
+  width: 3rem;
+  min-width: 3rem;
+  height: 3rem;
+
+  border-radius: 1rem;
+
+  background: var(--wp-primary-soft);
+  color: var(--wp-primary);
+
+  mat-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 1.6rem;
+  }
+}
+
+.wp-compliance-banner__content {
+  flex: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: var(--wp-muted);
+  }
+
+  ul {
+    margin: 0.75rem 0 0;
+    padding-left: 1.25rem;
+    color: var(--wp-muted);
+  }
+}
+
+.wp-compliance-banner__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wp-compliance-banner--compliant {
+  border-color: #86efac;
+}
+
+.wp-compliance-banner--attention {
+  border-color: #fcd34d;
+}
+
+.wp-compliance-banner--non-compliant {
+  border-color: #fca5a5;
+}

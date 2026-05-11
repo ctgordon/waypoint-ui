@@ -1,0 +1,24 @@
+<section class="wp-compliance-banner" [class]="'wp-compliance-banner--' + tone">
+  <div class="wp-compliance-banner__icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+
+  <div class="wp-compliance-banner__content">
+    <div class="wp-compliance-banner__heading">
+      <h2>{{ title }}</h2>
+
+      <wp-status-pill
+        [label]="title"
+        [tone]="tone"
+      />
+    </div>
+
+    <p>{{ summary }}</p>
+
+    <ul *ngIf="messages.length > 0">
+      <li *ngFor="let message of messages">
+        {{ message }}
+      </li>
+    </ul>
+  </div>
+</section>

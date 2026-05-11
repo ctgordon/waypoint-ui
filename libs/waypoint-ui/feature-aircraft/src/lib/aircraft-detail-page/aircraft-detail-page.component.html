@@ -12,6 +12,15 @@
       <mat-chip>{{ aircraft.status }}</mat-chip>
     </header>
 
+    @if (compliance$ | async; as compliance) {
+      <wp-compliance-banner
+        [status]="compliance.status"
+        [overdueItems]="compliance.overdueItems"
+        [dueSoonItems]="compliance.dueSoonItems"
+        [messages]="compliance.messages"
+      />
+    }
+
     <div class="row g-3">
       <div class="col-12 col-lg-4">
         <mat-card>
