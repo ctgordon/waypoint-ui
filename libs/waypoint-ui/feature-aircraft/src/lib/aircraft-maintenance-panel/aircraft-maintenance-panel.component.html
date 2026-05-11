@@ -2,6 +2,16 @@
   title="Maintenance"
   description="Upcoming and active maintenance events for this aircraft."
 >
+
+  <a
+    panel-actions
+    mat-stroked-button
+    color="primary"
+    [routerLink]="['/app/aircraft', aircraftIdValue, 'maintenance-events', 'new']"
+  >
+    Schedule maintenance
+  </a>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading maintenance events..." />

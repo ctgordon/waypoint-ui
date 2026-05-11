@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { MaintenanceEventSummary } from '@waypoint-ui/shared-models';
+import {
+  CreatedMaintenanceEventResponse,
+  CreateMaintenanceEventRequest,
+  MaintenanceEventSummary,
+} from '@waypoint-ui/shared-models';
 import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
 @Injectable({
@@ -14,7 +18,23 @@ export class MaintenanceApiService {
 
   listForAircraft(aircraftId: string): Observable<MaintenanceEventSummary[]> {
     return this.http.get<MaintenanceEventSummary[]>(
-      joinUrl(this.config.apiBaseUrl,`/v1/aircraft/${aircraftId}/maintenance-events`),
+      joinUrl(
+        this.config.apiBaseUrl,
+        `/v1/aircraft/${aircraftId}/maintenance-events`,
+      ),
+    );
+  }
+
+  createForAircraft(
+    aircraftId: string,
+    request: CreateMaintenanceEventRequest,
+  ): Observable<CreatedMaintenanceEventResponse> {
+    return this.http.post<CreatedMaintenanceEventResponse>(
+      joinUrl(
+        this.config.apiBaseUrl,
+        `/v1/aircraft/${aircraftId}/maintenance-events`,
+      ),
+      request,
     );
   }
 }

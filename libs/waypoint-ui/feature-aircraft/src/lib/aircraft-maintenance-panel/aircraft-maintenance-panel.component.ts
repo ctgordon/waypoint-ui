@@ -16,6 +16,8 @@ import {
   StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'wp-aircraft-maintenance-panel',
@@ -28,6 +30,8 @@ import {
     LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
+    MatButton,
+    RouterLink,
   ],
   templateUrl: './aircraft-maintenance-panel.component.html',
   styleUrl: './aircraft-maintenance-panel.component.scss',
@@ -38,8 +42,12 @@ export class AircraftMaintenancePanelComponent {
   viewState$: Observable<ApiViewState<MaintenanceEventSummary[]>> =
     toApiViewState(of([]));
 
+  aircraftIdValue = '';
+
   @Input({ required: true })
   set aircraftId(value: string) {
+    this.aircraftIdValue = value;
+
     this.viewState$ = toApiViewState(
       value ? this.maintenanceApi.listForAircraft(value) : of([]),
     );
