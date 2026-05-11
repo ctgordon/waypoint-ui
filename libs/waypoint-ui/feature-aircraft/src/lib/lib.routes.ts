@@ -6,6 +6,7 @@ import { CreateDefectPageComponent } from './create-defect-page/create-defect-pa
 import {
   CreateMaintenanceEventPageComponent
 } from './create-maintenance-event-page/create-maintenance-event-page.component';
+import { CreateDocumentPageComponent } from './create-document-page/create-document-page.component';
 
 export const featureAircraftRoutes: Routes = [
   {
@@ -23,5 +24,9 @@ export const featureAircraftRoutes: Routes = [
   {
     path: ':aircraftId/maintenance-events/new',
     component: CreateMaintenanceEventPageComponent,
+  },
+  {
+    path: ':aircraftId/documents/new',
+    component: CreateDocumentPageComponent,
   },
 ];

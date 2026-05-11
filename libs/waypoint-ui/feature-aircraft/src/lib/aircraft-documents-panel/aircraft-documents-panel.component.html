@@ -2,6 +2,15 @@
   title="Documents"
   description="Aircraft records, certificates, and expiry-sensitive documents."
 >
+  <a
+    panel-actions
+    mat-stroked-button
+    color="primary"
+    [routerLink]="['/app/aircraft', aircraftIdValue, 'documents', 'new']"
+  >
+    Add document
+  </a>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading documents..." />

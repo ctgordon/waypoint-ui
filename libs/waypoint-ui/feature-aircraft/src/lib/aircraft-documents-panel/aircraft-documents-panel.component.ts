@@ -16,6 +16,8 @@ import {
   StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
+import { RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'wp-aircraft-documents-panel',
@@ -28,6 +30,8 @@ import {
     LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
+    RouterLink,
+    MatButton,
   ],
   templateUrl: './aircraft-documents-panel.component.html',
   styleUrl: './aircraft-documents-panel.component.scss',
@@ -38,8 +42,12 @@ export class AircraftDocumentsPanelComponent {
   viewState$: Observable<ApiViewState<AircraftDocumentSummary[]>> =
     toApiViewState(of([]));
 
+  aircraftIdValue = '';
+
   @Input({ required: true })
   set aircraftId(value: string) {
+    this.aircraftIdValue = value;
+
     this.viewState$ = toApiViewState(
       value ? this.documentsApi.listForAircraft(value) : of([]),
     );
