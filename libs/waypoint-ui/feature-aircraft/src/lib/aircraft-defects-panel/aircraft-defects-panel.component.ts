@@ -1,5 +1,5 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { Component, inject, Input } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { Observable, of } from 'rxjs';
 
@@ -9,7 +9,7 @@ import {
   EmptyStateComponent,
   SectionPanelComponent,
   StatusPillComponent,
-  WaypointStatusTone,
+  WaypointStatusTone
 } from '@waypoint-ui/shared-ui';
 
 @Component({
@@ -18,8 +18,6 @@ import {
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     MatDividerModule,
     EmptyStateComponent,
     SectionPanelComponent,

@@ -1,16 +1,12 @@
-import { NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-import {
-  StatusPillComponent,
-  WaypointStatusTone,
-} from '../status-pill/status-pill.component';
+import { StatusPillComponent, WaypointStatusTone } from '../status-pill/status-pill.component';
 
 @Component({
   selector: 'wp-compliance-banner',
   standalone: true,
-  imports: [NgFor, MatIconModule, StatusPillComponent],
+  imports: [MatIconModule, StatusPillComponent],
   templateUrl: './compliance-banner.component.html',
   styleUrl: './compliance-banner.component.scss',
 })
