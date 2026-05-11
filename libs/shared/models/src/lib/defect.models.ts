@@ -23,3 +23,19 @@ export interface CreatedDefectResponse {
   status: string;
   reportedAt: string;
 }
+
+export type DefectStatus = 'OPEN' | 'IN_PROGRESS' | 'CLOSED';
+
+export interface UpdateDefectStatusRequest {
+  status: DefectStatus;
+}
+
+export interface UpdatedDefectResponse {
+  defectId: string;
+  aircraftId: string;
+  title: string;
+  description: string | null;
+  severity: string;
+  status: string;
+  reportedAt: string;
+}

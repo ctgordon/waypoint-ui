@@ -2,7 +2,6 @@
   title="Defects"
   description="Open and recently reported aircraft defects."
 >
-
   <a
     panel-actions
     mat-stroked-button
@@ -60,6 +59,38 @@
                     [label]="formatLabel(defect.status)"
                     [tone]="statusTone(defect.status)"
                   />
+
+                  @if (defect.status !== 'CLOSED') {
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      [matMenuTriggerFor]="defectActions"
+                    >
+                      Actions
+                    </button>
+
+                    <mat-menu #defectActions="matMenu">
+                      @if (canMarkInProgress(defect)) {
+                        <button
+                          mat-menu-item
+                          type="button"
+                          (click)="updateStatus(defect, 'IN_PROGRESS')"
+                        >
+                          Mark in progress
+                        </button>
+                      }
+
+                      @if (canClose(defect)) {
+                        <button
+                          mat-menu-item
+                          type="button"
+                          (click)="updateStatus(defect, 'CLOSED')"
+                        >
+                          Close defect
+                        </button>
+                      }
+                    </mat-menu>
+                  }
                 </div>
               </div>
             </article>

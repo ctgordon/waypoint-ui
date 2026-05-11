@@ -6,7 +6,9 @@ import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 import {
   CreatedDefectResponse,
   CreateDefectRequest,
+  DefectStatus,
   DefectSummary,
+  UpdatedDefectResponse,
 } from '@waypoint-ui/shared-models';
 
 @Injectable({
@@ -29,6 +31,16 @@ export class DefectsApiService {
     return this.http.post<CreatedDefectResponse>(
       joinUrl(this.config.apiBaseUrl, `/v1/aircraft/${aircraftId}/defects`),
       request,
+    );
+  }
+
+  updateStatus(
+    defectId: string,
+    status: DefectStatus,
+  ): Observable<UpdatedDefectResponse> {
+    return this.http.patch<UpdatedDefectResponse>(
+      joinUrl(this.config.apiBaseUrl, `/v1/defects/${defectId}/status`),
+      { status },
     );
   }
 }
