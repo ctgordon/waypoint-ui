@@ -32,3 +32,25 @@ export interface CreatedMaintenanceEventResponse {
   notes: string | null;
   createdAt: string;
 }
+
+export type MaintenanceEventStatus =
+  | 'PLANNED'
+  | 'SCHEDULED'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'CANCELLED';
+
+export interface UpdateMaintenanceEventStatusRequest {
+  status: MaintenanceEventStatus;
+}
+
+export interface UpdatedMaintenanceEventResponse {
+  eventId: string;
+  aircraftId: string;
+  eventType: string;
+  title: string;
+  dueDate: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}

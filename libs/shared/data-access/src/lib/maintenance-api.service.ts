@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import {
   CreatedMaintenanceEventResponse,
   CreateMaintenanceEventRequest,
+  MaintenanceEventStatus,
   MaintenanceEventSummary,
+  UpdatedMaintenanceEventResponse,
 } from '@waypoint-ui/shared-models';
 import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
@@ -35,6 +37,19 @@ export class MaintenanceApiService {
         `/v1/aircraft/${aircraftId}/maintenance-events`,
       ),
       request,
+    );
+  }
+
+  updateStatus(
+    eventId: string,
+    status: MaintenanceEventStatus,
+  ): Observable<UpdatedMaintenanceEventResponse> {
+    return this.http.patch<UpdatedMaintenanceEventResponse>(
+      joinUrl(
+        this.config.apiBaseUrl,
+        `/v1/maintenance-events/${eventId}/status`,
+      ),
+      { status },
     );
   }
 }

@@ -7,7 +7,10 @@ import {
   MaintenanceApiService,
   toApiViewState,
 } from '@waypoint-ui/shared-data-access';
-import { MaintenanceEventSummary } from '@waypoint-ui/shared-models';
+import {
+  MaintenanceEventStatus,
+  MaintenanceEventSummary,
+} from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
   ErrorStateComponent,
@@ -18,6 +21,8 @@ import {
 } from '@waypoint-ui/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'wp-aircraft-maintenance-panel',
@@ -32,12 +37,16 @@ import { RouterLink } from '@angular/router';
     StatusPillComponent,
     MatButton,
     RouterLink,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
   ],
   templateUrl: './aircraft-maintenance-panel.component.html',
   styleUrl: './aircraft-maintenance-panel.component.scss',
 })
 export class AircraftMaintenancePanelComponent {
   private readonly maintenanceApi = inject(MaintenanceApiService);
+  private readonly snackBar = inject(MatSnackBar);
 
   viewState$: Observable<ApiViewState<MaintenanceEventSummary[]>> =
     toApiViewState(of([]));
@@ -47,9 +56,14 @@ export class AircraftMaintenancePanelComponent {
   @Input({ required: true })
   set aircraftId(value: string) {
     this.aircraftIdValue = value;
+    this.loadEvents();
+  }
 
+  loadEvents(): void {
     this.viewState$ = toApiViewState(
-      value ? this.maintenanceApi.listForAircraft(value) : of([]),
+      this.aircraftIdValue
+        ? this.maintenanceApi.listForAircraft(this.aircraftIdValue)
+        : of([]),
     );
   }
 
@@ -97,5 +111,49 @@ export class AircraftMaintenancePanelComponent {
 
   formatLabel(value: string): string {
     return value.replace(/_/g, ' ');
+  }
+
+  updateStatus(
+    event: MaintenanceEventSummary,
+    status: MaintenanceEventStatus,
+  ): void {
+    this.maintenanceApi.updateStatus(event.eventId, status).subscribe({
+      next: () => {
+        this.snackBar.open('Maintenance event status updated', 'Dismiss', {
+          duration: 2500,
+        });
+
+        this.loadEvents();
+      },
+      error: () => {
+        this.snackBar.open(
+          'Could not update maintenance event status. Please try again.',
+          'Dismiss',
+          {
+            duration: 3500,
+          },
+        );
+      },
+    });
+  }
+
+  canSchedule(event: MaintenanceEventSummary): boolean {
+    return event.status === 'PLANNED';
+  }
+
+  canStart(event: MaintenanceEventSummary): boolean {
+    return event.status === 'PLANNED' || event.status === 'SCHEDULED';
+  }
+
+  canComplete(event: MaintenanceEventSummary): boolean {
+    return event.status === 'IN_PROGRESS' || event.status === 'SCHEDULED';
+  }
+
+  canCancel(event: MaintenanceEventSummary): boolean {
+    return event.status !== 'COMPLETED' && event.status !== 'CANCELLED';
+  }
+
+  hasActions(event: MaintenanceEventSummary): boolean {
+    return event.status !== 'COMPLETED' && event.status !== 'CANCELLED';
   }
 }
