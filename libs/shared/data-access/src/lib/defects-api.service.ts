@@ -3,16 +3,18 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { DefectSummary } from '@waypoint-ui/shared-models';
+import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DefectsApiService {
   private readonly http = inject(HttpClient);
+  private readonly config = inject(APP_CONFIG);
 
   listForAircraft(aircraftId: string): Observable<DefectSummary[]> {
     return this.http.get<DefectSummary[]>(
-      `http://localhost:8080/v1/aircraft/${aircraftId}/defects`,
+      joinUrl(this.config.apiBaseUrl,`/v1/aircraft/${aircraftId}/defects`),
     );
   }
 }

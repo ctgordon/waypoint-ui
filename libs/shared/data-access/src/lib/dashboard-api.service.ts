@@ -3,16 +3,18 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { DashboardSummary } from '@waypoint-ui/shared-models';
+import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardApiService {
   private readonly http = inject(HttpClient);
+  private readonly config = inject(APP_CONFIG);
 
   getSummary(): Observable<DashboardSummary> {
     return this.http.get<DashboardSummary>(
-      'http://localhost:8080/v1/dashboard/summary',
+      joinUrl(this.config.apiBaseUrl,'/v1/dashboard/summary'),
     );
   }
 }

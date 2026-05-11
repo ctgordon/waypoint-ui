@@ -31,7 +31,8 @@
       "@waypoint-ui/feature-aircraft": [
         "./libs/waypoint-ui/feature-aircraft/src/index.ts"
       ],
-      "@org/shared-theme": ["./libs/shared/theme/src/index.ts"]
+      "@org/shared-theme": ["./libs/shared/theme/src/index.ts"],
+      "@waypoint-ui/shared-util-config": ["./libs/shared/util-config/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
