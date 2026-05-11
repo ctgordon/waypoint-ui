@@ -8,6 +8,7 @@ import { map, switchMap } from 'rxjs';
 import { AircraftApiService } from '@waypoint-ui/shared-data-access';
 import { AircraftDefectsPanelComponent } from '../aircraft-defects-panel/aircraft-defects-panel.component';
 import { AircraftMaintenancePanelComponent } from '../aircraft-maintenance-panel/aircraft-maintenance-panel.component';
+import { AircraftDocumentsPanelComponent } from '../aircraft-documents-panel/aircraft-documents-panel.component';
 
 @Component({
   selector: 'lib-aircraft-detail-page',
@@ -19,6 +20,7 @@ import { AircraftMaintenancePanelComponent } from '../aircraft-maintenance-panel
     MatChipsModule,
     AircraftDefectsPanelComponent,
     AircraftMaintenancePanelComponent,
+    AircraftDocumentsPanelComponent,
   ],
   templateUrl: './aircraft-detail-page.component.html',
   styleUrl: './aircraft-detail-page.component.scss',
