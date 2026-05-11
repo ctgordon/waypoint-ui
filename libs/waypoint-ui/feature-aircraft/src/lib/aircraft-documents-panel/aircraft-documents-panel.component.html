@@ -1,0 +1,55 @@
+<wp-section-panel
+  title="Documents"
+  description="Aircraft records, certificates, and expiry-sensitive documents."
+>
+  <ng-container *ngIf="documents$ | async as documents">
+    <wp-empty-state
+      *ngIf="documents.length === 0"
+      icon="description"
+      title="No documents recorded"
+      message="This aircraft does not have any document records yet."
+    />
+
+    <div class="document-list" *ngIf="documents.length > 0">
+      <article class="document-item" *ngFor="let document of documents">
+        <div class="document-item__main">
+          <div>
+            <h3>{{ document.title }}</h3>
+
+            <p>
+              {{ formatLabel(document.documentType) }}
+              @if (document.reference) {
+                <span> · {{ document.reference }}</span>
+              }
+            </p>
+
+            <small>
+              Created {{ document.createdAt | date: 'mediumDate' }}
+              @if (document.issueDate) {
+                <span> · Issued {{ document.issueDate | date: 'mediumDate' }}</span>
+              }
+            </small>
+          </div>
+
+          <div class="document-item__status">
+            <wp-status-pill
+              [label]="formatLabel(document.status)"
+              [tone]="statusTone(document.status)"
+            />
+
+            <wp-status-pill
+              [label]="expiryLabel(document.expiryDate)"
+              [tone]="expiryTone(document.expiryDate)"
+            />
+          </div>
+        </div>
+
+        @if (document.notes) {
+          <p class="document-item__notes">
+            {{ document.notes }}
+          </p>
+        }
+      </article>
+    </div>
+  </ng-container>
+</wp-section-panel>

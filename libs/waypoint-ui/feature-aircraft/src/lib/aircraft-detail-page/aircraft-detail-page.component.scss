@@ -63,3 +63,8 @@ dd {
 .muted {
   color: var(--wp-muted);
 }
+
+.aircraft-detail__stack {
+  display: grid;
+  gap: 1rem;
+}
