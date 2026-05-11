@@ -1,0 +1,76 @@
+/* libs/waypoint-ui/feature-dashboard/src/lib/dashboard-page/dashboard-page.component.scss */
+
+.dashboard {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+  gap: 1rem;
+}
+
+.dashboard-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dashboard-list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 1rem;
+
+  border: 1px solid var(--wp-border);
+  border-radius: var(--wp-radius);
+
+  color: inherit;
+  text-decoration: none;
+
+  background: var(--wp-surface);
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+
+  &:hover {
+    border-color: var(--wp-primary-light);
+    box-shadow: 0 8px 24px rgba(16, 42, 67, 0.06);
+    transform: translateY(-1px);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+    color: var(--wp-muted);
+  }
+
+  small {
+    display: inline-block;
+    margin-top: 0.45rem;
+    color: var(--wp-muted);
+  }
+}
+
+.dashboard-list-item__status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 12rem;
+}
+
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

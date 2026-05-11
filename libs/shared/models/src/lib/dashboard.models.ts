@@ -1,9 +1,18 @@
 export interface DashboardSummary {
   organisationId: string;
-  organisationName: string;
-
   totalAircraft: number;
   openDefects: number;
-  dueSoonCount: number;
-  nonCompliantAircraft: number;
+  inProgressDefects?: number;
+  dueSoonMaintenanceEvents: number;
+  nonCompliantAircraft?: number;
+}
+
+export interface DueSoonMaintenanceItem {
+  eventId: string;
+  aircraftId: string;
+  registration: string;
+  title: string;
+  eventType: string;
+  dueDate: string | null;
+  status: string;
 }

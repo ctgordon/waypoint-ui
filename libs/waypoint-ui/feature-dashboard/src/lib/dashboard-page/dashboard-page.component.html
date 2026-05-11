@@ -1,39 +1,148 @@
-@if (summary$ | async; as summary) {
-  <section>
-    <wp-page-header
-      eyebrow="Fleet overview"
-      [title]="summary.organisationId"
-      description="Current operational maintenance and compliance status."
+<!-- libs/waypoint-ui/feature-dashboard/src/lib/dashboard-page/dashboard-page.component.html -->
+
+<wp-page-header
+  eyebrow="Operations"
+  title="Fleet overview"
+  description="A calm summary of current maintenance, defect, and compliance risk across the fleet."
+/>
+
+@if (viewState$ | async; as vm) {
+  @if (vm.status === 'loading') {
+    <wp-loading-state message="Loading fleet overview..." />
+  }
+
+  @if (vm.status === 'error') {
+    <wp-error-state
+      title="Could not load dashboard"
+      message="Please refresh the page or try again later."
     />
+  }
 
-    <div class="row g-3">
-      <div class="col-12 col-md-3">
-        <wp-metric-card
-          label="Total aircraft"
-          [value]="summary.totalAircraft"
-        />
+  @if (vm.status === 'success') {
+    <section class="dashboard">
+      <div class="row g-3">
+        <div class="col-12 col-md-6 col-xl-3">
+          <wp-metric-card
+            label="Aircraft"
+            [value]="vm.data.summary.totalAircraft"
+            hint="Total aircraft in this organisation"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <wp-metric-card
+            label="Open defects"
+            [value]="vm.data.summary.openDefects"
+            hint="Defects requiring attention"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <wp-metric-card
+            label="Due soon"
+            [value]="vm.data.summary.dueSoonMaintenanceEvents"
+            hint="Maintenance events approaching"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <wp-metric-card
+            label="Compliance risk"
+            [value]="vm.data.summary.nonCompliantAircraft ?? 0"
+            hint="Aircraft currently non-compliant"
+          />
+        </div>
       </div>
 
-      <div class="col-12 col-md-3">
-        <wp-metric-card
-          label="Open defects"
-          [value]="summary.openDefects"
-        />
-      </div>
+      <div class="dashboard-grid">
+        <wp-section-panel
+          title="Due soon maintenance"
+          description="Upcoming inspections and maintenance events."
+        >
+          @if (vm.data.dueSoon.length === 0) {
+            <wp-empty-state
+              icon="event_available"
+              title="No due-soon maintenance"
+              message="There are no maintenance events currently due soon."
+            />
+          }
 
-      <div class="col-12 col-md-3">
-        <wp-metric-card
-          label="Due soon"
-          [value]="summary.openDefects"
-        />
-      </div>
+          @if (vm.data.dueSoon.length > 0) {
+            <div class="dashboard-list">
+              @for (item of vm.data.dueSoon; track item.eventId) {
+                <a
+                  class="dashboard-list-item"
+                  [routerLink]="['/app/aircraft', item.aircraftId]"
+                >
+                  <div>
+                    <h3>{{ item.registration }}</h3>
 
-      <div class="col-12 col-md-3">
-        <wp-metric-card
-          label="In progress defects"
-          [value]="summary.openDefects"
-        />
+                    <p>
+                      {{ item.title }}
+                      ·
+                      {{ formatLabel(item.eventType) }}
+                    </p>
+
+                    <small>
+                      @if (item.dueDate) {
+                        Due {{ item.dueDate | date: 'mediumDate' }}
+                      } @else {
+                        No due date
+                      }
+                    </small>
+                  </div>
+
+                  <div class="dashboard-list-item__status">
+                    <wp-status-pill
+                      [label]="formatLabel(item.status)"
+                      [tone]="maintenanceTone(item.status)"
+                    />
+
+                    <wp-status-pill
+                      [label]="dueLabel(item.dueDate)"
+                      [tone]="dueTone(item.dueDate)"
+                    />
+                  </div>
+                </a>
+              }
+            </div>
+          }
+        </wp-section-panel>
+
+        <wp-section-panel
+          title="Fleet compliance"
+          description="Aircraft compliance status across the organisation."
+        >
+          @if (vm.data.compliance.length === 0) {
+            <wp-empty-state
+              icon="verified"
+              title="No compliance data"
+              message="Compliance status has not been calculated yet."
+            />
+          }
+
+          @if (vm.data.compliance.length > 0) {
+            <div class="dashboard-list">
+              @for (aircraft of vm.data.compliance; track aircraft.aircraftId) {
+                <a
+                  class="dashboard-list-item"
+                  [routerLink]="['/app/aircraft', aircraft.aircraftId]"
+                >
+                  <div>
+                    <h3>{{ aircraft.registration }}</h3>
+                    <p>Aircraft compliance status</p>
+                  </div>
+
+                  <wp-status-pill
+                    [label]="formatLabel(aircraft.status)"
+                    [tone]="complianceTone(aircraft.status)"
+                  />
+                </a>
+              }
+            </div>
+          }
+        </wp-section-panel>
       </div>
-    </div>
-  </section>
+    </section>
+  }
 }
