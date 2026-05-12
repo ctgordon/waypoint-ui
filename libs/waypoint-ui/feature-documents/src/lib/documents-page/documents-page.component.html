@@ -8,8 +8,15 @@
   title="Documents"
   description="Documents prioritised by expiry risk."
 >
-
   <wp-filter-panel>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="clearFilters()"
+    >
+      Clear filters
+    </button>
+
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
 
@@ -24,8 +31,10 @@
     <mat-form-field appearance="outline">
       <mat-label>Type</mat-label>
 
-      <mat-select [ngModel]="selectedType()"
-                  (ngModelChange)="selectedType.set($event)">
+      <mat-select
+        [ngModel]="selectedType()"
+        (ngModelChange)="selectedType.set($event)"
+      >
         <mat-option value="ALL">All types</mat-option>
         <mat-option value="CERTIFICATE">Certificate</mat-option>
         <mat-option value="MAINTENANCE_RECORD">Maintenance record</mat-option>
@@ -38,8 +47,10 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
 
-      <mat-select [ngModel]="selectedStatus()"
-                  (ngModelChange)="selectedStatus.set($event)">
+      <mat-select
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="selectedStatus.set($event)"
+      >
         <mat-option value="ALL">All statuses</mat-option>
         <mat-option value="ACTIVE">Active</mat-option>
         <mat-option value="VALID">Valid</mat-option>
@@ -52,8 +63,10 @@
     <mat-form-field appearance="outline">
       <mat-label>Expiry</mat-label>
 
-      <mat-select [ngModel]="selectedExpiry()"
-                  (ngModelChange)="selectedExpiry.set($event)">
+      <mat-select
+        [ngModel]="selectedExpiry()"
+        (ngModelChange)="selectedExpiry.set($event)"
+      >
         <mat-option value="ALL">All expiry states</mat-option>
         <mat-option value="EXPIRED">Expired</mat-option>
         <mat-option value="EXPIRING_SOON">Expiring soon</mat-option>
@@ -83,7 +96,7 @@
         />
       }
 
-      @if (vm.data.length > 0) {
+      @if (filteredDocuments(vm.data).length > 0) {
         <div class="fleet-document-list">
           @for (
             document of filteredDocuments(vm.data);

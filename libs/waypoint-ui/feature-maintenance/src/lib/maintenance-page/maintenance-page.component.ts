@@ -1,13 +1,24 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+
 import {
-  ApiViewState,
   MaintenanceApiService,
   toApiViewState,
 } from '@waypoint-ui/shared-data-access';
 import { FleetMaintenanceEventSummary } from '@waypoint-ui/shared-models';
+import {
+  allToNull,
+  emptyToNull,
+  normaliseQuery,
+  queryParamOrDefault,
+} from '@waypoint-ui/shared-util-config';
 import {
   EmptyStateComponent,
   ErrorStateComponent,
@@ -18,10 +29,6 @@ import {
   StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'wp-maintenance-page',
@@ -29,26 +36,25 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     AsyncPipe,
     DatePipe,
+    FormsModule,
     RouterLink,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
     EmptyStateComponent,
     ErrorStateComponent,
+    FilterPanelComponent,
     LoadingStateComponent,
     PageHeaderComponent,
     SectionPanelComponent,
     StatusPillComponent,
-    FormsModule,
-
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    FilterPanelComponent,
   ],
   templateUrl: './maintenance-page.component.html',
   styleUrl: './maintenance-page.component.scss',
 })
 export class MaintenancePageComponent {
   private readonly maintenanceApi = inject(MaintenanceApiService);
-
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -56,21 +62,24 @@ export class MaintenancePageComponent {
   readonly selectedStatus = signal('ALL');
   readonly selectedDue = signal('ALL');
 
+  readonly viewState$ = toApiViewState(
+    this.maintenanceApi.listFleetMaintenanceEvents(),
+  );
+
   constructor() {
     const params = this.route.snapshot.queryParamMap;
 
     this.search.set(params.get('search') ?? '');
-    this.selectedStatus.set(params.get('status') ?? 'ALL');
-    this.selectedDue.set(params.get('due') ?? 'ALL');
+    this.selectedStatus.set(queryParamOrDefault(params.get('status')));
+    this.selectedDue.set(queryParamOrDefault(params.get('due')));
 
     effect(() => {
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
-          search: this.search() || null,
-          status:
-            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
-          due: this.selectedDue() === 'ALL' ? null : this.selectedDue(),
+          search: emptyToNull(this.search()),
+          status: allToNull(this.selectedStatus()),
+          due: allToNull(this.selectedDue()),
         },
         queryParamsHandling: 'merge',
         replaceUrl: true,
@@ -78,9 +87,35 @@ export class MaintenancePageComponent {
     });
   }
 
-  readonly viewState$ = toApiViewState(
-    this.maintenanceApi.listFleetMaintenanceEvents(),
-  );
+  clearFilters(): void {
+    this.search.set('');
+    this.selectedStatus.set('ALL');
+    this.selectedDue.set('ALL');
+  }
+
+  filteredEvents(
+    events: FleetMaintenanceEventSummary[],
+  ): FleetMaintenanceEventSummary[] {
+    return this.sortEvents(
+      events.filter((event) => {
+        const query = normaliseQuery(this.search());
+
+        const matchesSearch =
+          !query ||
+          event.registration.toLowerCase().includes(query) ||
+          event.title.toLowerCase().includes(query);
+
+        const matchesStatus =
+          this.selectedStatus() === 'ALL' ||
+          event.status === this.selectedStatus();
+
+        const matchesDue =
+          this.selectedDue() === 'ALL' || this.matchesDueFilter(event.dueDate);
+
+        return matchesSearch && matchesStatus && matchesDue;
+      }),
+    );
+  }
 
   sortEvents(
     events: FleetMaintenanceEventSummary[],
@@ -139,51 +174,6 @@ export class MaintenancePageComponent {
     return value.replace(/_/g, ' ');
   }
 
-  private duePriority(dueDate: string | null): number {
-    if (!dueDate) return Number.MAX_SAFE_INTEGER;
-    return new Date(dueDate).getTime();
-  }
-
-  private statusPriority(status: string): number {
-    switch (status) {
-      case 'IN_PROGRESS':
-        return 0;
-      case 'PLANNED':
-      case 'SCHEDULED':
-        return 1;
-      case 'COMPLETED':
-        return 2;
-      case 'CANCELLED':
-        return 3;
-      default:
-        return 4;
-    }
-  }
-
-  filteredEvents(
-    events: FleetMaintenanceEventSummary[],
-  ): FleetMaintenanceEventSummary[] {
-    return this.sortEvents(
-      events.filter((event) => {
-        const query = this.search().toLowerCase();
-
-        const matchesSearch =
-          !query ||
-          event.registration.toLowerCase().includes(query) ||
-          event.title.toLowerCase().includes(query);
-
-        const matchesStatus =
-          this.selectedStatus() === 'ALL' ||
-          event.status === this.selectedStatus();
-
-        const matchesDue =
-          this.selectedDue() === 'ALL' || this.matchesDueFilter(event.dueDate);
-
-        return matchesSearch && matchesStatus && matchesDue;
-      }),
-    );
-  }
-
   private matchesDueFilter(dueDate: string | null): boolean {
     if (this.selectedDue() === 'NO_DUE_DATE') {
       return !dueDate;
@@ -200,12 +190,32 @@ export class MaintenancePageComponent {
     switch (this.selectedDue()) {
       case 'OVERDUE':
         return days < 0;
-
       case 'DUE_SOON':
         return days >= 0 && days <= 30;
-
       default:
         return true;
+    }
+  }
+
+  private duePriority(dueDate: string | null): number {
+    if (!dueDate) return Number.MAX_SAFE_INTEGER;
+
+    return new Date(dueDate).getTime();
+  }
+
+  private statusPriority(status: string): number {
+    switch (status) {
+      case 'IN_PROGRESS':
+        return 0;
+      case 'PLANNED':
+      case 'SCHEDULED':
+        return 1;
+      case 'COMPLETED':
+        return 2;
+      case 'CANCELLED':
+        return 3;
+      default:
+        return 4;
     }
   }
 }

@@ -49,6 +49,14 @@
         description="Prioritised by operational risk."
       >
         <wp-filter-panel>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="clearFilters()"
+          >
+            Clear filters
+          </button>
+
           <mat-form-field appearance="outline">
             <mat-label>Search</mat-label>
 
@@ -63,8 +71,10 @@
           <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
 
-            <mat-select [ngModel]="selectedStatus()"
-                        (ngModelChange)="selectedStatus.set($event)">
+            <mat-select
+              [ngModel]="selectedStatus()"
+              (ngModelChange)="selectedStatus.set($event)"
+            >
               <mat-option value="ALL">All statuses</mat-option>
               <mat-option value="NON_COMPLIANT">Non-compliant</mat-option>
               <mat-option value="ATTENTION_REQUIRED">Attention required</mat-option>
@@ -72,6 +82,7 @@
             </mat-select>
           </mat-form-field>
         </wp-filter-panel>
+
         @if (filteredAircraft(vm.data.aircraft).length === 0) {
           <wp-empty-state
             icon="search_off"
@@ -80,7 +91,7 @@
           />
         }
 
-        @if (vm.data.aircraft.length > 0) {
+        @if (filteredAircraft(vm.data.aircraft).length > 0) {
           <div class="compliance-list">
             @for (
               aircraft of filteredAircraft(vm.data.aircraft);
@@ -93,9 +104,7 @@
                 <div>
                   <h3>{{ aircraft.registration }}</h3>
 
-                  <p>
-                    Aircraft operational compliance status
-                  </p>
+                  <p>Aircraft operational compliance status</p>
                 </div>
 
                 <wp-status-pill

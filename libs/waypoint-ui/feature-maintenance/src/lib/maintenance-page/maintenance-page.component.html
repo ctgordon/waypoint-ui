@@ -9,6 +9,14 @@
   description="Prioritised by due date and operational status."
 >
   <wp-filter-panel>
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="clearFilters()"
+    >
+      Clear filters
+    </button>
+
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
 
@@ -23,55 +31,34 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
 
-      <mat-select [ngModel]="selectedStatus()"
-                  (ngModelChange)="selectedStatus.set($event)">
+      <mat-select
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="selectedStatus.set($event)"
+      >
         <mat-option value="ALL">All statuses</mat-option>
-
-        <mat-option value="PLANNED">
-          Planned
-        </mat-option>
-
-        <mat-option value="SCHEDULED">
-          Scheduled
-        </mat-option>
-
-        <mat-option value="IN_PROGRESS">
-          In progress
-        </mat-option>
-
-        <mat-option value="COMPLETED">
-          Completed
-        </mat-option>
-
-        <mat-option value="CANCELLED">
-          Cancelled
-        </mat-option>
+        <mat-option value="PLANNED">Planned</mat-option>
+        <mat-option value="SCHEDULED">Scheduled</mat-option>
+        <mat-option value="IN_PROGRESS">In progress</mat-option>
+        <mat-option value="COMPLETED">Completed</mat-option>
+        <mat-option value="CANCELLED">Cancelled</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Due</mat-label>
 
-      <mat-select [ngModel]="selectedDue()"
-                  (ngModelChange)="selectedDue.set($event)">
-        <mat-option value="ALL">
-          All due states
-        </mat-option>
-
-        <mat-option value="OVERDUE">
-          Overdue
-        </mat-option>
-
-        <mat-option value="DUE_SOON">
-          Due soon
-        </mat-option>
-
-        <mat-option value="NO_DUE_DATE">
-          No due date
-        </mat-option>
+      <mat-select
+        [ngModel]="selectedDue()"
+        (ngModelChange)="selectedDue.set($event)"
+      >
+        <mat-option value="ALL">All due states</mat-option>
+        <mat-option value="OVERDUE">Overdue</mat-option>
+        <mat-option value="DUE_SOON">Due soon</mat-option>
+        <mat-option value="NO_DUE_DATE">No due date</mat-option>
       </mat-select>
     </mat-form-field>
   </wp-filter-panel>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading maintenance events..." />
@@ -93,7 +80,7 @@
         />
       }
 
-      @if (vm.data.length > 0) {
+      @if (filteredEvents(vm.data).length > 0) {
         <div class="fleet-maintenance-list">
           @for (
             event of filteredEvents(vm.data);
@@ -111,6 +98,7 @@
 
                   <p>
                     {{ formatLabel(event.eventType) }}
+
                     @if (event.notes) {
                       <span> · {{ event.notes }}</span>
                     }
