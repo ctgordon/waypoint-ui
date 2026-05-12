@@ -14,7 +14,8 @@
 
       <input
         matInput
-        [(ngModel)]="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
         placeholder="Registration or title"
       />
     </mat-form-field>
@@ -22,7 +23,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
 
-      <mat-select [(ngModel)]="selectedStatus">
+      <mat-select [ngModel]="selectedStatus()"
+                  (ngModelChange)="selectedStatus.set($event)">
         <mat-option value="ALL">All statuses</mat-option>
 
         <mat-option value="PLANNED">
@@ -50,7 +52,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Due</mat-label>
 
-      <mat-select [(ngModel)]="selectedDue">
+      <mat-select [ngModel]="selectedDue()"
+                  (ngModelChange)="selectedDue.set($event)">
         <mat-option value="ALL">
           All due states
         </mat-option>

@@ -1,6 +1,6 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
   DefectsApiService,
@@ -9,7 +9,8 @@ import {
 import { FleetDefectSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
-  ErrorStateComponent, FilterPanelComponent,
+  ErrorStateComponent,
+  FilterPanelComponent,
   LoadingStateComponent,
   PageHeaderComponent,
   SectionPanelComponent,
@@ -20,7 +21,6 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from 'express';
 
 @Component({
   selector: 'wp-defects-page',

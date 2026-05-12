@@ -1,6 +1,6 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
   ApiViewState,
@@ -10,7 +10,8 @@ import {
 import { FleetMaintenanceEventSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
-  ErrorStateComponent, FilterPanelComponent,
+  ErrorStateComponent,
+  FilterPanelComponent,
   LoadingStateComponent,
   PageHeaderComponent,
   SectionPanelComponent,
@@ -48,9 +49,34 @@ import { MatSelectModule } from '@angular/material/select';
 export class MaintenancePageComponent {
   private readonly maintenanceApi = inject(MaintenanceApiService);
 
-  search = '';
-  selectedStatus = 'ALL';
-  selectedDue = 'ALL';
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly search = signal('');
+  readonly selectedStatus = signal('ALL');
+  readonly selectedDue = signal('ALL');
+
+  constructor() {
+    const params = this.route.snapshot.queryParamMap;
+
+    this.search.set(params.get('search') ?? '');
+    this.selectedStatus.set(params.get('status') ?? 'ALL');
+    this.selectedDue.set(params.get('due') ?? 'ALL');
+
+    effect(() => {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          search: this.search() || null,
+          status:
+            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
+          due: this.selectedDue() === 'ALL' ? null : this.selectedDue(),
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
+  }
 
   readonly viewState$ = toApiViewState(
     this.maintenanceApi.listFleetMaintenanceEvents(),
@@ -139,18 +165,19 @@ export class MaintenancePageComponent {
   ): FleetMaintenanceEventSummary[] {
     return this.sortEvents(
       events.filter((event) => {
+        const query = this.search().toLowerCase();
+
         const matchesSearch =
-          !this.search ||
-          event.registration
-            .toLowerCase()
-            .includes(this.search.toLowerCase()) ||
-          event.title.toLowerCase().includes(this.search.toLowerCase());
+          !query ||
+          event.registration.toLowerCase().includes(query) ||
+          event.title.toLowerCase().includes(query);
 
         const matchesStatus =
-          this.selectedStatus === 'ALL' || event.status === this.selectedStatus;
+          this.selectedStatus() === 'ALL' ||
+          event.status === this.selectedStatus();
 
         const matchesDue =
-          this.selectedDue === 'ALL' || this.matchesDueFilter(event.dueDate);
+          this.selectedDue() === 'ALL' || this.matchesDueFilter(event.dueDate);
 
         return matchesSearch && matchesStatus && matchesDue;
       }),
@@ -158,7 +185,7 @@ export class MaintenancePageComponent {
   }
 
   private matchesDueFilter(dueDate: string | null): boolean {
-    if (this.selectedDue === 'NO_DUE_DATE') {
+    if (this.selectedDue() === 'NO_DUE_DATE') {
       return !dueDate;
     }
 
@@ -170,7 +197,7 @@ export class MaintenancePageComponent {
       (new Date(dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
     );
 
-    switch (this.selectedDue) {
+    switch (this.selectedDue()) {
       case 'OVERDUE':
         return days < 0;
 

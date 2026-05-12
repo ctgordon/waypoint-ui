@@ -15,7 +15,8 @@
 
       <input
         matInput
-        [(ngModel)]="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
         placeholder="Registration, title or reference"
       />
     </mat-form-field>
@@ -23,7 +24,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Type</mat-label>
 
-      <mat-select [(ngModel)]="selectedType">
+      <mat-select [ngModel]="selectedType()"
+                  (ngModelChange)="selectedType.set($event)">
         <mat-option value="ALL">All types</mat-option>
         <mat-option value="CERTIFICATE">Certificate</mat-option>
         <mat-option value="MAINTENANCE_RECORD">Maintenance record</mat-option>
@@ -36,7 +38,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
 
-      <mat-select [(ngModel)]="selectedStatus">
+      <mat-select [ngModel]="selectedStatus()"
+                  (ngModelChange)="selectedStatus.set($event)">
         <mat-option value="ALL">All statuses</mat-option>
         <mat-option value="ACTIVE">Active</mat-option>
         <mat-option value="VALID">Valid</mat-option>
@@ -49,7 +52,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Expiry</mat-label>
 
-      <mat-select [(ngModel)]="selectedExpiry">
+      <mat-select [ngModel]="selectedExpiry()"
+                  (ngModelChange)="selectedExpiry.set($event)">
         <mat-option value="ALL">All expiry states</mat-option>
         <mat-option value="EXPIRED">Expired</mat-option>
         <mat-option value="EXPIRING_SOON">Expiring soon</mat-option>

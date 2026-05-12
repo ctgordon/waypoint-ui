@@ -1,6 +1,6 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
   ApiViewState,
@@ -49,10 +49,38 @@ import { MatSelectModule } from '@angular/material/select';
 export class DocumentsPageComponent {
   private readonly documentsApi = inject(DocumentsApiService);
 
-  search = '';
-  selectedType = 'ALL';
-  selectedStatus = 'ALL';
-  selectedExpiry = 'ALL';
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly search = signal('');
+  readonly selectedType = signal('ALL');
+  readonly selectedStatus = signal('ALL');
+  readonly selectedExpiry = signal('ALL');
+
+  constructor() {
+    const params = this.route.snapshot.queryParamMap;
+
+    this.search.set(params.get('search') ?? '');
+    this.selectedType.set(params.get('type') ?? 'ALL');
+    this.selectedStatus.set(params.get('status') ?? 'ALL');
+    this.selectedExpiry.set(params.get('expiry') ?? 'ALL');
+
+    effect(() => {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          search: this.search() || null,
+          type: this.selectedType() === 'ALL' ? null : this.selectedType(),
+          status:
+            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
+          expiry:
+            this.selectedExpiry() === 'ALL' ? null : this.selectedExpiry(),
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
+  }
 
   readonly viewState$ = toApiViewState(this.documentsApi.listFleetDocuments());
 
@@ -119,7 +147,7 @@ export class DocumentsPageComponent {
   filteredDocuments(documents: FleetDocumentSummary[]): FleetDocumentSummary[] {
     return this.sortDocuments(
       documents.filter((document) => {
-        const query = this.search.toLowerCase();
+        const query = this.search().toLowerCase();
 
         const matchesSearch =
           !query ||
@@ -128,15 +156,15 @@ export class DocumentsPageComponent {
           document.reference?.toLowerCase().includes(query);
 
         const matchesType =
-          this.selectedType === 'ALL' ||
-          document.documentType === this.selectedType;
+          this.selectedType() === 'ALL' ||
+          document.documentType === this.selectedType();
 
         const matchesStatus =
-          this.selectedStatus === 'ALL' ||
-          document.status === this.selectedStatus;
+          this.selectedStatus() === 'ALL' ||
+          document.status === this.selectedStatus();
 
         const matchesExpiry =
-          this.selectedExpiry === 'ALL' ||
+          this.selectedExpiry() === 'ALL' ||
           this.matchesExpiryFilter(document.expiryDate);
 
         return matchesSearch && matchesType && matchesStatus && matchesExpiry;
@@ -145,7 +173,7 @@ export class DocumentsPageComponent {
   }
 
   private matchesExpiryFilter(expiryDate: string | null): boolean {
-    if (this.selectedExpiry === 'NO_EXPIRY') {
+    if (this.selectedExpiry() === 'NO_EXPIRY') {
       return !expiryDate;
     }
 
@@ -157,7 +185,7 @@ export class DocumentsPageComponent {
       (new Date(expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
     );
 
-    switch (this.selectedExpiry) {
+    switch (this.selectedExpiry()) {
       case 'EXPIRED':
         return days < 0;
 
