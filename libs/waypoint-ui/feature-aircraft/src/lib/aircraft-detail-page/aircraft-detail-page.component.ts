@@ -41,7 +41,7 @@ export class AircraftDetailPageComponent {
 
   readonly compliance$ = this.aircraft$.pipe(
     switchMap((aircraft) =>
-      this.complianceApi.getAircraftCompliance(aircraft.aircraftId),
+      this.complianceApi.getAircraftComplianceDetail(aircraft.aircraftId),
     ),
   );
 }

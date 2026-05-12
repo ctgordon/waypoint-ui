@@ -1,12 +1,88 @@
 <wp-page-header
   eyebrow="Operations"
-  title="Compliance"
-  description="Review and manage compliance across the fleet."
+  title="Fleet compliance"
+  description="Monitor compliance risk and aircraft operational readiness across the fleet."
 />
 
-<wp-section-panel
-  title="Compliance"
-  description="A fleet-wide defect list will appear here."
->
-  <p class="muted">Coming next.</p>
-</wp-section-panel>
+@if (viewState$ | async; as vm) {
+  @if (vm.status === 'loading') {
+    <wp-loading-state message="Loading compliance overview..." />
+  }
+
+  @if (vm.status === 'error') {
+    <wp-error-state
+      title="Could not load compliance"
+      message="Please refresh the page or try again later."
+    />
+  }
+
+  @if (vm.status === 'success') {
+    <section class="compliance-page">
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <wp-metric-card
+            label="Compliant"
+            [value]="vm.data.summary.compliantAircraft"
+            hint="Aircraft currently compliant"
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <wp-metric-card
+            label="Attention required"
+            [value]="vm.data.summary.attentionRequiredAircraft"
+            hint="Aircraft requiring review"
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <wp-metric-card
+            label="Non-compliant"
+            [value]="vm.data.summary.nonCompliantAircraft"
+            hint="Aircraft currently non-compliant"
+          />
+        </div>
+      </div>
+
+      <wp-section-panel
+        title="Aircraft compliance"
+        description="Prioritised by operational risk."
+      >
+        @if (vm.data.aircraft.length === 0) {
+          <wp-empty-state
+            icon="verified"
+            title="No compliance data"
+            message="Compliance status has not been calculated yet."
+          />
+        }
+
+        @if (vm.data.aircraft.length > 0) {
+          <div class="compliance-list">
+            @for (
+              aircraft of sortAircraft(vm.data.aircraft);
+              track aircraft.aircraftId
+              ) {
+              <a
+                class="compliance-item"
+                [routerLink]="['/app/aircraft', aircraft.aircraftId]"
+              >
+                <div>
+                  <h3>{{ aircraft.registration }}</h3>
+
+                  <p>
+                    Aircraft operational compliance status
+                  </p>
+                </div>
+
+                <wp-status-pill
+                  [label]="formatLabel(aircraft.status)"
+                  [tone]="complianceTone(aircraft.status)"
+                />
+              </a>
+            }
+          </div>
+        }
+      </wp-section-panel>
+    </section>
+  }
+}

@@ -17,3 +17,9 @@ export interface AircraftComplianceStatus {
   registration: string;
   status: AircraftComplianceState;
 }
+
+export interface ComplianceSummary {
+  compliantAircraft: number;
+  attentionRequiredAircraft: number;
+  nonCompliantAircraft: number;
+}
