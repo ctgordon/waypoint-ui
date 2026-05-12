@@ -21,6 +21,13 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {
+  allToNull,
+  emptyToNull,
+  normaliseQuery,
+  queryParamOrDefault,
+} from '@waypoint-ui/shared-util-config';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'wp-defects-page',
@@ -41,6 +48,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatSelectModule,
     FilterPanelComponent,
+    MatButtonModule,
   ],
   templateUrl: './defects-page.component.html',
   styleUrl: './defects-page.component.scss',
@@ -61,18 +69,16 @@ export class DefectsPageComponent {
     const params = this.route.snapshot.queryParamMap;
 
     this.search.set(params.get('search') ?? '');
-    this.selectedSeverity.set(params.get('severity') ?? 'ALL');
-    this.selectedStatus.set(params.get('status') ?? 'ALL');
+    this.selectedSeverity.set(queryParamOrDefault(params.get('severity')));
+    this.selectedStatus.set(queryParamOrDefault(params.get('status')));
 
     effect(() => {
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
-          search: this.search() || null,
-          severity:
-            this.selectedSeverity() === 'ALL' ? null : this.selectedSeverity(),
-          status:
-            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
+          search: emptyToNull(this.search()),
+          severity: allToNull(this.selectedSeverity()),
+          status: allToNull(this.selectedStatus()),
         },
         queryParamsHandling: 'merge',
         replaceUrl: true,
@@ -144,7 +150,7 @@ export class DefectsPageComponent {
   filteredDefects(defects: FleetDefectSummary[]): FleetDefectSummary[] {
     return this.sortDefects(
       defects.filter((defect) => {
-        const query = this.search().toLowerCase();
+        const query = normaliseQuery(this.search());
 
         const matchesSearch =
           !query ||
@@ -162,5 +168,11 @@ export class DefectsPageComponent {
         return matchesSearch && matchesSeverity && matchesStatus;
       }),
     );
+  }
+
+  clearFilters(): void {
+    this.search.set('');
+    this.selectedSeverity.set('ALL');
+    this.selectedStatus.set('ALL');
   }
 }
