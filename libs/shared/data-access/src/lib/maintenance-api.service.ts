@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {
   CreatedMaintenanceEventResponse,
   CreateMaintenanceEventRequest,
+  FleetMaintenanceEventSummary,
   MaintenanceEventStatus,
   MaintenanceEventSummary,
   UpdatedMaintenanceEventResponse,
@@ -50,6 +51,12 @@ export class MaintenanceApiService {
         `/v1/maintenance-events/${eventId}/status`,
       ),
       { status },
+    );
+  }
+
+  listFleetMaintenanceEvents(): Observable<FleetMaintenanceEventSummary[]> {
+    return this.http.get<FleetMaintenanceEventSummary[]>(
+      joinUrl(this.config.apiBaseUrl, '/v1/maintenance-events'),
     );
   }
 }

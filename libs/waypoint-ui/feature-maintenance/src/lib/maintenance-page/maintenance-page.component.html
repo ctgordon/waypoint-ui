@@ -1,12 +1,79 @@
 <wp-page-header
   eyebrow="Operations"
-  title="Defects"
-  description="Review and manage defects across the fleet."
+  title="Fleet maintenance"
+  description="Track scheduled, active, and overdue maintenance across the fleet."
 />
 
 <wp-section-panel
-  title="Fleet defects"
-  description="A fleet-wide defect list will appear here."
+  title="Maintenance events"
+  description="Prioritised by due date and operational status."
 >
-  <p class="muted">Coming next.</p>
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading maintenance events..." />
+    }
+
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load maintenance events"
+        message="Please refresh the page or try again later."
+      />
+    }
+
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="event_available"
+          title="No maintenance events"
+          message="There are no maintenance events across the fleet."
+        />
+      }
+
+      @if (vm.data.length > 0) {
+        <div class="fleet-maintenance-list">
+          @for (event of sortEvents(vm.data); track event.eventId) {
+            <a
+              class="fleet-maintenance-item"
+              [routerLink]="['/app/aircraft', event.aircraftId]"
+            >
+              <div class="fleet-maintenance-item__main">
+                <strong>{{ event.registration }}</strong>
+
+                <div>
+                  <h3>{{ event.title }}</h3>
+
+                  <p>
+                    {{ formatLabel(event.eventType) }}
+                    @if (event.notes) {
+                      <span> · {{ event.notes }}</span>
+                    }
+                  </p>
+
+                  <small>
+                    @if (event.dueDate) {
+                      Due {{ event.dueDate | date: 'mediumDate' }}
+                    } @else {
+                      No due date
+                    }
+                  </small>
+                </div>
+              </div>
+
+              <div class="fleet-maintenance-item__status">
+                <wp-status-pill
+                  [label]="formatLabel(event.status)"
+                  [tone]="statusTone(event.status)"
+                />
+
+                <wp-status-pill
+                  [label]="dueLabel(event.dueDate)"
+                  [tone]="dueTone(event.dueDate)"
+                />
+              </div>
+            </a>
+          }
+        </div>
+      }
+    }
+  }
 </wp-section-panel>

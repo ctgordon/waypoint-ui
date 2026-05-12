@@ -54,3 +54,15 @@ export interface UpdatedMaintenanceEventResponse {
   notes: string | null;
   createdAt: string;
 }
+
+export interface FleetMaintenanceEventSummary {
+  eventId: string;
+  aircraftId: string;
+  registration: string;
+  eventType: string;
+  title: string;
+  dueDate: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
