@@ -48,18 +48,40 @@
         title="Aircraft compliance"
         description="Prioritised by operational risk."
       >
-        @if (vm.data.aircraft.length === 0) {
+        <div class="filter-toolbar">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+
+            <input
+              matInput
+              [(ngModel)]="search"
+              placeholder="Registration"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+
+            <mat-select [(ngModel)]="selectedStatus">
+              <mat-option value="ALL">All statuses</mat-option>
+              <mat-option value="NON_COMPLIANT">Non-compliant</mat-option>
+              <mat-option value="ATTENTION_REQUIRED">Attention required</mat-option>
+              <mat-option value="COMPLIANT">Compliant</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        @if (filteredAircraft(vm.data.aircraft).length === 0) {
           <wp-empty-state
-            icon="verified"
-            title="No compliance data"
-            message="Compliance status has not been calculated yet."
+            icon="search_off"
+            title="No matching aircraft"
+            message="Try adjusting your filters or search terms."
           />
         }
 
         @if (vm.data.aircraft.length > 0) {
           <div class="compliance-list">
             @for (
-              aircraft of sortAircraft(vm.data.aircraft);
+              aircraft of filteredAircraft(vm.data.aircraft);
               track aircraft.aircraftId
               ) {
               <a

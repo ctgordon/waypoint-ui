@@ -53,3 +53,16 @@
     align-items: flex-start;
   }
 }
+
+.filter-toolbar {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) 16rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .filter-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
