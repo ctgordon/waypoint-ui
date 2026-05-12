@@ -8,7 +8,7 @@
   title="Maintenance events"
   description="Prioritised by due date and operational status."
 >
-  <div class="filter-toolbar">
+  <wp-filter-panel>
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
 
@@ -68,7 +68,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+  </wp-filter-panel>
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading maintenance events..." />

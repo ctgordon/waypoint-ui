@@ -10,7 +10,7 @@ import {
 import { FleetDocumentSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
-  ErrorStateComponent,
+  ErrorStateComponent, FilterPanelComponent,
   LoadingStateComponent,
   PageHeaderComponent,
   SectionPanelComponent,
@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    FilterPanelComponent,
   ],
   templateUrl: './documents-page.component.html',
   styleUrl: './documents-page.component.scss',

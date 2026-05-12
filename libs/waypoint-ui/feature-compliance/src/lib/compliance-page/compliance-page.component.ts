@@ -15,7 +15,7 @@ import {
 
 import {
   EmptyStateComponent,
-  ErrorStateComponent,
+  ErrorStateComponent, FilterPanelComponent,
   LoadingStateComponent,
   MetricCardComponent,
   PageHeaderComponent,
@@ -52,6 +52,7 @@ interface ComplianceViewModel {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    FilterPanelComponent,
   ],
   templateUrl: './compliance-page.component.html',
   styleUrl: './compliance-page.component.scss',

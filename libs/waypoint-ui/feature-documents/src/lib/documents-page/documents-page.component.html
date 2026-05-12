@@ -9,7 +9,7 @@
   description="Documents prioritised by expiry risk."
 >
 
-  <div class="filter-toolbar">
+  <wp-filter-panel>
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
 
@@ -56,7 +56,7 @@
         <mat-option value="NO_EXPIRY">No expiry</mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+  </wp-filter-panel>
 
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {

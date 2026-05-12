@@ -9,7 +9,7 @@ import {
 import { FleetDefectSummary } from '@waypoint-ui/shared-models';
 import {
   EmptyStateComponent,
-  ErrorStateComponent,
+  ErrorStateComponent, FilterPanelComponent,
   LoadingStateComponent,
   PageHeaderComponent,
   SectionPanelComponent,
@@ -39,6 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    FilterPanelComponent,
   ],
   templateUrl: './defects-page.component.html',
   styleUrl: './defects-page.component.scss',

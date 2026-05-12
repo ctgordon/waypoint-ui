@@ -6,3 +6,4 @@ export * from './lib/empty-state/empty-state.component';
 export * from './lib/compliance-banner/compliance-banner.component';
 export * from './lib/loading-state/loading-state.component';
 export * from './lib/error-state/error-state.component';
+export * from './lib/filter-panel/filter-panel.component';
