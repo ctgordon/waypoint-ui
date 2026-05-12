@@ -1,12 +1,72 @@
 <wp-page-header
   eyebrow="Operations"
-  title="Defects"
-  description="Review and manage defects across the fleet."
+  title="Fleet defects"
+  description="Review defects across the fleet and prioritise aircraft requiring attention."
 />
 
 <wp-section-panel
-  title="Fleet defects"
-  description="A fleet-wide defect list will appear here."
+  title="Defects"
+  description="Open, in-progress, and recently closed defects."
 >
-  <p class="muted">Coming next.</p>
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading fleet defects..." />
+    }
+
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load defects"
+        message="Please refresh the page or try again later."
+      />
+    }
+
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="task_alt"
+          title="No defects recorded"
+          message="There are no defects across the fleet."
+        />
+      }
+
+      @if (vm.data.length > 0) {
+        <div class="fleet-defect-list">
+          @for (defect of sortDefects(vm.data); track defect.defectId) {
+            <a
+              class="fleet-defect-item"
+              [routerLink]="['/app/aircraft', defect.aircraftId]"
+            >
+              <div class="fleet-defect-item__main">
+                <strong>{{ defect.registration }}</strong>
+
+                <div>
+                  <h3>{{ defect.title }}</h3>
+
+                  @if (defect.description) {
+                    <p>{{ defect.description }}</p>
+                  }
+
+                  <small>
+                    Reported {{ defect.reportedAt | date: 'mediumDate' }}
+                  </small>
+                </div>
+              </div>
+
+              <div class="fleet-defect-item__status">
+                <wp-status-pill
+                  [label]="formatLabel(defect.severity)"
+                  [tone]="severityTone(defect.severity)"
+                />
+
+                <wp-status-pill
+                  [label]="formatLabel(defect.status)"
+                  [tone]="statusTone(defect.status)"
+                />
+              </div>
+            </a>
+          }
+        </div>
+      }
+    }
+  }
 </wp-section-panel>

@@ -39,3 +39,14 @@ export interface UpdatedDefectResponse {
   status: string;
   reportedAt: string;
 }
+
+export interface FleetDefectSummary {
+  defectId: string;
+  aircraftId: string;
+  registration: string;
+  title: string;
+  description: string | null;
+  severity: 'MINOR' | 'MAJOR' | string;
+  status: 'OPEN' | 'IN_PROGRESS' | 'CLOSED' | string;
+  reportedAt: string;
+}

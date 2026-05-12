@@ -8,6 +8,7 @@ import {
   CreateDefectRequest,
   DefectStatus,
   DefectSummary,
+  FleetDefectSummary,
   UpdatedDefectResponse,
 } from '@waypoint-ui/shared-models';
 
@@ -41,6 +42,12 @@ export class DefectsApiService {
     return this.http.patch<UpdatedDefectResponse>(
       joinUrl(this.config.apiBaseUrl, `/v1/defects/${defectId}/status`),
       { status },
+    );
+  }
+
+  listFleetDefects(): Observable<FleetDefectSummary[]> {
+    return this.http.get<FleetDefectSummary[]>(
+      joinUrl(this.config.apiBaseUrl, '/v1/defects'),
     );
   }
 }
