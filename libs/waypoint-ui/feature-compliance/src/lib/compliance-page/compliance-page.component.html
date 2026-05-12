@@ -54,7 +54,8 @@
 
             <input
               matInput
-              [(ngModel)]="search"
+              [ngModel]="search()"
+              (ngModelChange)="search.set($event)"
               placeholder="Registration"
             />
           </mat-form-field>
@@ -62,7 +63,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
 
-            <mat-select [(ngModel)]="selectedStatus">
+            <mat-select [ngModel]="selectedStatus()"
+                        (ngModelChange)="selectedStatus.set($event)">
               <mat-option value="ALL">All statuses</mat-option>
               <mat-option value="NON_COMPLIANT">Non-compliant</mat-option>
               <mat-option value="ATTENTION_REQUIRED">Attention required</mat-option>

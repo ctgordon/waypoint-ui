@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { combineLatest } from 'rxjs';
 
 import {
@@ -60,8 +60,31 @@ interface ComplianceViewModel {
 export class CompliancePageComponent {
   private readonly complianceApi = inject(ComplianceApiService);
 
-  search = '';
-  selectedStatus = 'ALL';
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly search = signal('');
+  readonly selectedStatus = signal('ALL');
+
+  constructor() {
+    const params = this.route.snapshot.queryParamMap;
+
+    this.search.set(params.get('search') ?? '');
+    this.selectedStatus.set(params.get('status') ?? 'ALL');
+
+    effect(() => {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          search: this.search() || null,
+          status:
+            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
+  }
 
   readonly viewState$ = toApiViewState(
     combineLatest({
@@ -121,13 +144,14 @@ export class CompliancePageComponent {
   ): AircraftComplianceStatus[] {
     return this.sortAircraft(
       aircraft.filter((item) => {
-        const query = this.search.toLowerCase();
+        const query = this.search().toLowerCase();
 
         const matchesSearch =
           !query || item.registration.toLowerCase().includes(query);
 
         const matchesStatus =
-          this.selectedStatus === 'ALL' || item.status === this.selectedStatus;
+          this.selectedStatus() === 'ALL' ||
+          item.status === this.selectedStatus();
 
         return matchesSearch && matchesStatus;
       }),
