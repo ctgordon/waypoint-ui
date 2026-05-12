@@ -1,12 +1,80 @@
 <wp-page-header
   eyebrow="Operations"
-  title="Defects"
-  description="Review and manage defects across the fleet."
+  title="Fleet documents"
+  description="Track aircraft certificates, manuals, records, and expiry-sensitive documentation."
 />
 
 <wp-section-panel
-  title="Fleet defects"
-  description="A fleet-wide defect list will appear here."
+  title="Documents"
+  description="Documents prioritised by expiry risk."
 >
-  <p class="muted">Coming next.</p>
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading documents..." />
+    }
+
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load documents"
+        message="Please refresh the page or try again later."
+      />
+    }
+
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="description"
+          title="No documents"
+          message="There are no fleet documents yet."
+        />
+      }
+
+      @if (vm.data.length > 0) {
+        <div class="fleet-document-list">
+          @for (document of sortDocuments(vm.data); track document.documentId) {
+            <a
+              class="fleet-document-item"
+              [routerLink]="['/app/aircraft', document.aircraftId]"
+            >
+              <div class="fleet-document-item__main">
+                <strong>{{ document.registration }}</strong>
+
+                <div>
+                  <h3>{{ document.title }}</h3>
+
+                  <p>
+                    {{ formatLabel(document.documentType) }}
+
+                    @if (document.reference) {
+                      <span> · {{ document.reference }}</span>
+                    }
+                  </p>
+
+                  <small>
+                    @if (document.expiryDate) {
+                      Expires {{ document.expiryDate | date: 'mediumDate' }}
+                    } @else {
+                      No expiry
+                    }
+                  </small>
+                </div>
+              </div>
+
+              <div class="fleet-document-item__status">
+                <wp-status-pill
+                  [label]="formatLabel(document.status)"
+                  [tone]="statusTone(document.status)"
+                />
+
+                <wp-status-pill
+                  [label]="expiryLabel(document.expiryDate)"
+                  [tone]="expiryTone(document.expiryDate)"
+                />
+              </div>
+            </a>
+          }
+        </div>
+      }
+    }
+  }
 </wp-section-panel>

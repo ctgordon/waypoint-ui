@@ -6,6 +6,7 @@ import {
   AircraftDocumentSummary,
   CreatedDocumentResponse,
   CreateDocumentRequest,
+  FleetDocumentSummary,
 } from '@waypoint-ui/shared-models';
 import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
@@ -29,6 +30,12 @@ export class DocumentsApiService {
     return this.http.post<CreatedDocumentResponse>(
       joinUrl(this.config.apiBaseUrl, `/v1/aircraft/${aircraftId}/documents`),
       request,
+    );
+  }
+
+  listFleetDocuments(): Observable<FleetDocumentSummary[]> {
+    return this.http.get<FleetDocumentSummary[]>(
+      joinUrl(this.config.apiBaseUrl, '/v1/documents'),
     );
   }
 }

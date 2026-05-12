@@ -39,3 +39,17 @@ export interface CreatedDocumentResponse {
   notes: string | null;
   createdAt: string;
 }
+
+export interface FleetDocumentSummary {
+  documentId: string;
+  aircraftId: string;
+  registration: string;
+  documentType: string;
+  title: string;
+  reference: string | null;
+  issueDate: string | null;
+  expiryDate: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
