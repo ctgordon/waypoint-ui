@@ -14,7 +14,8 @@
 
       <input
         matInput
-        [(ngModel)]="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
         placeholder="Registration or title"
       />
     </mat-form-field>
@@ -22,7 +23,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Severity</mat-label>
 
-      <mat-select [(ngModel)]="selectedSeverity">
+      <mat-select [ngModel]="selectedSeverity()"
+                  (ngModelChange)="selectedSeverity.set($event)">
         <mat-option value="ALL">All severities</mat-option>
         <mat-option value="MAJOR">Major</mat-option>
         <mat-option value="MINOR">Minor</mat-option>
@@ -32,7 +34,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
 
-      <mat-select [(ngModel)]="selectedStatus">
+      <mat-select [ngModel]="selectedStatus()"
+                  (ngModelChange)="selectedStatus.set($event)">
         <mat-option value="ALL">All statuses</mat-option>
         <mat-option value="OPEN">Open</mat-option>
         <mat-option value="IN_PROGRESS">In progress</mat-option>

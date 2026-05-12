@@ -1,6 +1,6 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import {
   DefectsApiService,
@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { Router } from 'express';
 
 @Component({
   selector: 'wp-defects-page',
@@ -49,9 +50,35 @@ export class DefectsPageComponent {
 
   readonly viewState$ = toApiViewState(this.defectsApi.listFleetDefects());
 
-  search = '';
-  selectedSeverity = 'ALL';
-  selectedStatus = 'ALL';
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly search = signal('');
+  readonly selectedSeverity = signal('ALL');
+  readonly selectedStatus = signal('ALL');
+
+  constructor() {
+    const params = this.route.snapshot.queryParamMap;
+
+    this.search.set(params.get('search') ?? '');
+    this.selectedSeverity.set(params.get('severity') ?? 'ALL');
+    this.selectedStatus.set(params.get('status') ?? 'ALL');
+
+    effect(() => {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          search: this.search() || null,
+          severity:
+            this.selectedSeverity() === 'ALL' ? null : this.selectedSeverity(),
+          status:
+            this.selectedStatus() === 'ALL' ? null : this.selectedStatus(),
+        },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
+  }
 
   sortDefects(defects: FleetDefectSummary[]): FleetDefectSummary[] {
     return [...defects].sort(
@@ -117,20 +144,20 @@ export class DefectsPageComponent {
   filteredDefects(defects: FleetDefectSummary[]): FleetDefectSummary[] {
     return this.sortDefects(
       defects.filter((defect) => {
+        const query = this.search().toLowerCase();
+
         const matchesSearch =
-          !this.search ||
-          defect.registration
-            .toLowerCase()
-            .includes(this.search.toLowerCase()) ||
-          defect.title.toLowerCase().includes(this.search.toLowerCase());
+          !query ||
+          defect.registration.toLowerCase().includes(query) ||
+          defect.title.toLowerCase().includes(query);
 
         const matchesSeverity =
-          this.selectedSeverity === 'ALL' ||
-          defect.severity === this.selectedSeverity;
+          this.selectedSeverity() === 'ALL' ||
+          defect.severity === this.selectedSeverity();
 
         const matchesStatus =
-          this.selectedStatus === 'ALL' ||
-          defect.status === this.selectedStatus;
+          this.selectedStatus() === 'ALL' ||
+          defect.status === this.selectedStatus();
 
         return matchesSearch && matchesSeverity && matchesStatus;
       }),
