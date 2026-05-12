@@ -8,6 +8,67 @@
   title="Maintenance events"
   description="Prioritised by due date and operational status."
 >
+  <div class="filter-toolbar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="search"
+        placeholder="Registration or title"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select [(ngModel)]="selectedStatus">
+        <mat-option value="ALL">All statuses</mat-option>
+
+        <mat-option value="PLANNED">
+          Planned
+        </mat-option>
+
+        <mat-option value="SCHEDULED">
+          Scheduled
+        </mat-option>
+
+        <mat-option value="IN_PROGRESS">
+          In progress
+        </mat-option>
+
+        <mat-option value="COMPLETED">
+          Completed
+        </mat-option>
+
+        <mat-option value="CANCELLED">
+          Cancelled
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Due</mat-label>
+
+      <mat-select [(ngModel)]="selectedDue">
+        <mat-option value="ALL">
+          All due states
+        </mat-option>
+
+        <mat-option value="OVERDUE">
+          Overdue
+        </mat-option>
+
+        <mat-option value="DUE_SOON">
+          Due soon
+        </mat-option>
+
+        <mat-option value="NO_DUE_DATE">
+          No due date
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading maintenance events..." />
@@ -21,17 +82,20 @@
     }
 
     @if (vm.status === 'success') {
-      @if (vm.data.length === 0) {
+      @if (filteredEvents(vm.data).length === 0) {
         <wp-empty-state
-          icon="event_available"
-          title="No maintenance events"
-          message="There are no maintenance events across the fleet."
+          icon="search_off"
+          title="No matching maintenance events"
+          message="Try adjusting your filters or search terms."
         />
       }
 
       @if (vm.data.length > 0) {
         <div class="fleet-maintenance-list">
-          @for (event of sortEvents(vm.data); track event.eventId) {
+          @for (
+            event of filteredEvents(vm.data);
+            track event.eventId
+            ) {
             <a
               class="fleet-maintenance-item"
               [routerLink]="['/app/aircraft', event.aircraftId]"

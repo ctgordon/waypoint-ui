@@ -17,6 +17,10 @@ import {
   StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'wp-maintenance-page',
@@ -31,12 +35,21 @@ import {
     PageHeaderComponent,
     SectionPanelComponent,
     StatusPillComponent,
+    FormsModule,
+
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   templateUrl: './maintenance-page.component.html',
   styleUrl: './maintenance-page.component.scss',
 })
 export class MaintenancePageComponent {
   private readonly maintenanceApi = inject(MaintenanceApiService);
+
+  search = '';
+  selectedStatus = 'ALL';
+  selectedDue = 'ALL';
 
   readonly viewState$ = toApiViewState(
     this.maintenanceApi.listFleetMaintenanceEvents(),
@@ -117,6 +130,54 @@ export class MaintenancePageComponent {
         return 3;
       default:
         return 4;
+    }
+  }
+
+  filteredEvents(
+    events: FleetMaintenanceEventSummary[],
+  ): FleetMaintenanceEventSummary[] {
+    return this.sortEvents(
+      events.filter((event) => {
+        const matchesSearch =
+          !this.search ||
+          event.registration
+            .toLowerCase()
+            .includes(this.search.toLowerCase()) ||
+          event.title.toLowerCase().includes(this.search.toLowerCase());
+
+        const matchesStatus =
+          this.selectedStatus === 'ALL' || event.status === this.selectedStatus;
+
+        const matchesDue =
+          this.selectedDue === 'ALL' || this.matchesDueFilter(event.dueDate);
+
+        return matchesSearch && matchesStatus && matchesDue;
+      }),
+    );
+  }
+
+  private matchesDueFilter(dueDate: string | null): boolean {
+    if (this.selectedDue === 'NO_DUE_DATE') {
+      return !dueDate;
+    }
+
+    if (!dueDate) {
+      return false;
+    }
+
+    const days = Math.ceil(
+      (new Date(dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    );
+
+    switch (this.selectedDue) {
+      case 'OVERDUE':
+        return days < 0;
+
+      case 'DUE_SOON':
+        return days >= 0 && days <= 30;
+
+      default:
+        return true;
     }
   }
 }

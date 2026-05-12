@@ -8,6 +8,39 @@
   title="Defects"
   description="Open, in-progress, and recently closed defects."
 >
+  <div class="filter-toolbar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="search"
+        placeholder="Registration or title"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Severity</mat-label>
+
+      <mat-select [(ngModel)]="selectedSeverity">
+        <mat-option value="ALL">All severities</mat-option>
+        <mat-option value="MAJOR">Major</mat-option>
+        <mat-option value="MINOR">Minor</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select [(ngModel)]="selectedStatus">
+        <mat-option value="ALL">All statuses</mat-option>
+        <mat-option value="OPEN">Open</mat-option>
+        <mat-option value="IN_PROGRESS">In progress</mat-option>
+        <mat-option value="CLOSED">Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading fleet defects..." />
@@ -21,17 +54,20 @@
     }
 
     @if (vm.status === 'success') {
-      @if (vm.data.length === 0) {
+      @if (filteredDefects(vm.data).length === 0) {
         <wp-empty-state
-          icon="task_alt"
-          title="No defects recorded"
-          message="There are no defects across the fleet."
+          icon="search_off"
+          title="No matching defects"
+          message="Try adjusting your filters or search terms."
         />
       }
 
       @if (vm.data.length > 0) {
         <div class="fleet-defect-list">
-          @for (defect of sortDefects(vm.data); track defect.defectId) {
+          @for (
+            defect of filteredDefects(vm.data);
+            track defect.defectId
+            ) {
             <a
               class="fleet-defect-item"
               [routerLink]="['/app/aircraft', defect.aircraftId]"

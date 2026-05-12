@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
-  ApiViewState,
   DefectsApiService,
   toApiViewState,
 } from '@waypoint-ui/shared-data-access';
@@ -17,6 +16,10 @@ import {
   StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'wp-defects-page',
@@ -31,6 +34,11 @@ import {
     PageHeaderComponent,
     SectionPanelComponent,
     StatusPillComponent,
+    FormsModule,
+
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   templateUrl: './defects-page.component.html',
   styleUrl: './defects-page.component.scss',
@@ -39,6 +47,10 @@ export class DefectsPageComponent {
   private readonly defectsApi = inject(DefectsApiService);
 
   readonly viewState$ = toApiViewState(this.defectsApi.listFleetDefects());
+
+  search = '';
+  selectedSeverity = 'ALL';
+  selectedStatus = 'ALL';
 
   sortDefects(defects: FleetDefectSummary[]): FleetDefectSummary[] {
     return [...defects].sort(
@@ -99,5 +111,28 @@ export class DefectsPageComponent {
       default:
         return 3;
     }
+  }
+
+  filteredDefects(defects: FleetDefectSummary[]): FleetDefectSummary[] {
+    return this.sortDefects(
+      defects.filter((defect) => {
+        const matchesSearch =
+          !this.search ||
+          defect.registration
+            .toLowerCase()
+            .includes(this.search.toLowerCase()) ||
+          defect.title.toLowerCase().includes(this.search.toLowerCase());
+
+        const matchesSeverity =
+          this.selectedSeverity === 'ALL' ||
+          defect.severity === this.selectedSeverity;
+
+        const matchesStatus =
+          this.selectedStatus === 'ALL' ||
+          defect.status === this.selectedStatus;
+
+        return matchesSearch && matchesSeverity && matchesStatus;
+      }),
+    );
   }
 }

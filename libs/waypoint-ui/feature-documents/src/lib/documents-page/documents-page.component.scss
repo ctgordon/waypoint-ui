@@ -79,3 +79,29 @@
     justify-content: flex-start;
   }
 }
+
+.filter-toolbar {
+  display: grid;
+
+  grid-template-columns:
+    minmax(16rem, 1fr)
+    13rem
+    13rem
+    13rem;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .filter-toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-toolbar {
+    grid-template-columns: 1fr;
+  }
+}

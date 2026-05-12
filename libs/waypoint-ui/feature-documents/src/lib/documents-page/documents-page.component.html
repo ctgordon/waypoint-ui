@@ -8,6 +8,56 @@
   title="Documents"
   description="Documents prioritised by expiry risk."
 >
+
+  <div class="filter-toolbar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="search"
+        placeholder="Registration, title or reference"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+
+      <mat-select [(ngModel)]="selectedType">
+        <mat-option value="ALL">All types</mat-option>
+        <mat-option value="CERTIFICATE">Certificate</mat-option>
+        <mat-option value="MAINTENANCE_RECORD">Maintenance record</mat-option>
+        <mat-option value="MANUAL">Manual</mat-option>
+        <mat-option value="LOGBOOK">Logbook</mat-option>
+        <mat-option value="OTHER">Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+
+      <mat-select [(ngModel)]="selectedStatus">
+        <mat-option value="ALL">All statuses</mat-option>
+        <mat-option value="ACTIVE">Active</mat-option>
+        <mat-option value="VALID">Valid</mat-option>
+        <mat-option value="EXPIRING_SOON">Expiring soon</mat-option>
+        <mat-option value="EXPIRED">Expired</mat-option>
+        <mat-option value="ARCHIVED">Archived</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Expiry</mat-label>
+
+      <mat-select [(ngModel)]="selectedExpiry">
+        <mat-option value="ALL">All expiry states</mat-option>
+        <mat-option value="EXPIRED">Expired</mat-option>
+        <mat-option value="EXPIRING_SOON">Expiring soon</mat-option>
+        <mat-option value="NO_EXPIRY">No expiry</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
       <wp-loading-state message="Loading documents..." />
@@ -21,17 +71,20 @@
     }
 
     @if (vm.status === 'success') {
-      @if (vm.data.length === 0) {
+      @if (filteredDocuments(vm.data).length === 0) {
         <wp-empty-state
-          icon="description"
-          title="No documents"
-          message="There are no fleet documents yet."
+          icon="search_off"
+          title="No matching documents"
+          message="Try adjusting your filters or search terms."
         />
       }
 
       @if (vm.data.length > 0) {
         <div class="fleet-document-list">
-          @for (document of sortDocuments(vm.data); track document.documentId) {
+          @for (
+            document of filteredDocuments(vm.data);
+            track document.documentId
+            ) {
             <a
               class="fleet-document-item"
               [routerLink]="['/app/aircraft', document.aircraftId]"
