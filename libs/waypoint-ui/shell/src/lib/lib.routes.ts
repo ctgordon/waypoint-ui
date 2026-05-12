@@ -25,6 +25,34 @@ export const shellRoutes: Routes = [
             (m) => m.featureAircraftRoutes,
           ),
       },
+      {
+        path: 'defects',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-defects').then(
+            (m) => m.featureDefectsRoutes,
+          ),
+      },
+      {
+        path: 'maintenance',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-maintenance').then(
+            (m) => m.featureMaintenanceRoutes,
+          ),
+      },
+      {
+        path: 'documents',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-documents').then(
+            (m) => m.featureDocumentsRoutes,
+          ),
+      },
+      {
+        path: 'compliance',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-compliance').then(
+            (m) => m.featureComplianceRoutes,
+          ),
+      },
     ],
   },
 ];

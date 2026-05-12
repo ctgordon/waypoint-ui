@@ -32,7 +32,21 @@
         "./libs/waypoint-ui/feature-aircraft/src/index.ts"
       ],
       "@org/shared-theme": ["./libs/shared/theme/src/index.ts"],
-      "@waypoint-ui/shared-util-config": ["./libs/shared/util-config/src/index.ts"]
+      "@waypoint-ui/shared-util-config": [
+        "./libs/shared/util-config/src/index.ts"
+      ],
+      "@waypoint-ui/feature-defects": [
+        "./libs/waypoint-ui/feature-defects/src/index.ts"
+      ],
+      "@waypoint-ui/feature-maintenance": [
+        "./libs/waypoint-ui/feature-maintenance/src/index.ts"
+      ],
+      "@waypoint-ui/feature-documents": [
+        "./libs/waypoint-ui/feature-documents/src/index.ts"
+      ],
+      "@waypoint-ui/feature-compliance": [
+        "./libs/waypoint-ui/feature-compliance/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
