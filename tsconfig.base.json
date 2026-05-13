@@ -46,6 +46,9 @@
       ],
       "@waypoint-ui/feature-compliance": [
         "./libs/waypoint-ui/feature-compliance/src/index.ts"
+      ],
+      "@waypoint-ui/shared-data-access-auth": [
+        "./libs/shared/data-access/auth/src/index.ts"
       ]
     }
   },

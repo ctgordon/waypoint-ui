@@ -33,7 +33,22 @@
       </mat-card-content>
 
       <mat-card-actions align="end">
-        <button mat-flat-button color="primary" (click)="signIn()">Sign in</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="signInWithAuth0()"
+        >
+          Sign in with Auth0
+        </button>
+
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="signInWithDevToken()"
+        >
+          Dev sign in
+        </button>
       </mat-card-actions>
     </mat-card>
   </section>

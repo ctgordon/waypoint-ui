@@ -1,11 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { TokenStorageService } from '@waypoint-ui/shared-util-auth';
 import {
   FormControl,
   FormGroup,
@@ -13,13 +8,23 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { AuthService } from '@auth0/auth0-angular';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+import { TokenStorageService } from '@waypoint-ui/shared-util-auth';
+import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
+
 type TokenResponse = {
   accessToken: string;
   tokenType: string;
 };
 
 @Component({
-  selector: 'lib-login-page',
+  selector: 'wp-login-page',
   standalone: true,
   imports: [
     MatButtonModule,
@@ -35,18 +40,28 @@ export class LoginPageComponent {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly tokenStorage = inject(TokenStorageService);
+  private readonly auth = inject(AuthService);
+  private readonly config = inject(APP_CONFIG);
 
-  loginForm: FormGroup = new FormGroup({
+  readonly loginForm = new FormGroup({
     emailFormControl: new FormControl('', [
       Validators.required,
       Validators.email,
     ]),
   });
 
-  signIn(): void {
+  signInWithAuth0(): void {
+    this.auth.loginWithRedirect({
+      appState: {
+        target: '/app/dashboard',
+      },
+    });
+  }
+
+  signInWithDevToken(): void {
     this.http
       .post<TokenResponse>(
-        'http://localhost:8081/auth/token?sub=chris&roles=USER',
+        joinUrl(this.config.authBaseUrl, '/auth/token?sub=chris&roles=USER'),
         {},
       )
       .subscribe((response) => {

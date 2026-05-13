@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthCallbackPageComponent } from './auth-call-back-page.component';
 
 export const appRoutes: Routes = [
   {
@@ -9,6 +10,10 @@ export const appRoutes: Routes = [
   {
     path: 'app',
     loadChildren: () => import('@waypoint-ui/shell').then((m) => m.shellRoutes),
+  },
+  {
+    path: 'callback',
+    component: AuthCallbackPageComponent,
   },
   {
     path: '',
