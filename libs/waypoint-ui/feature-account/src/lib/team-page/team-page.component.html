@@ -12,14 +12,77 @@
     panel-actions
     mat-stroked-button
     type="button"
-    disabled
+    (click)="openInviteForm()"
   >
     Invite member
   </button>
 
+  @if (isInviteFormOpen) {
+    <mat-card class="invite-card">
+      <mat-card-content>
+        <h3>Invite member</h3>
+
+        <form [formGroup]="form" (ngSubmit)="submitInvite()">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+
+            <input
+              matInput
+              formControlName="email"
+              placeholder="engineer@example.com"
+            />
+
+            @if (form.controls.email.hasError('required')) {
+              <mat-error>Email is required</mat-error>
+            }
+
+            @if (form.controls.email.hasError('email')) {
+              <mat-error>Enter a valid email</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+
+            <mat-select formControlName="role">
+              @for (role of roles; track role) {
+                <mat-option [value]="role">
+                  {{ formatLabel(role) }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          @if (errorMessage) {
+            <p class="form-error">{{ errorMessage }}</p>
+          }
+
+          <div class="form-actions">
+            <button
+              mat-button
+              type="button"
+              (click)="cancelInvite()"
+            >
+              Cancel
+            </button>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="isSubmitting"
+            >
+              {{ isSubmitting ? 'Creating...' : 'Create invite' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
   @if (viewState$ | async; as vm) {
     @if (vm.status === 'loading') {
-      <wp-loading-state message="Loading team members..." />
+      <wp-loading-state message="Loading team..." />
     }
 
     @if (vm.status === 'error') {
@@ -30,7 +93,7 @@
     }
 
     @if (vm.status === 'success') {
-      @if (vm.data.length === 0) {
+      @if (vm.data.members.length === 0) {
         <wp-empty-state
           icon="groups"
           title="No team members"
@@ -38,12 +101,13 @@
         />
       }
 
-      @if (vm.data.length > 0) {
+      @if (vm.data.members.length > 0) {
         <div class="team-list">
-          @for (member of vm.data; track member.membershipId) {
+          @for (member of vm.data.members; track member.membershipId) {
             <article class="team-member">
               <div>
                 <h3>{{ member.email }}</h3>
+
                 <p>User ID: {{ member.userId }}</p>
 
                 <small>
@@ -59,6 +123,58 @@
           }
         </div>
       }
+
+      <section class="pending-invitations">
+        <h3>Pending invitations</h3>
+
+        @if (vm.data.invitations.length === 0) {
+          <p class="muted">
+            No pending invitations yet.
+          </p>
+        }
+
+        @if (vm.data.invitations.length > 0) {
+          <div class="team-list">
+            @for (
+              invitation of vm.data.invitations;
+              track invitation.invitationId
+              ) {
+              <article class="team-member">
+                <div>
+                  <h3>{{ invitation.email }}</h3>
+
+                  <p>
+                    Role: {{ formatLabel(invitation.role) }}
+                  </p>
+
+                  <small>
+                    Expires {{ invitation.expiresAt | date: 'mediumDate' }}
+                  </small>
+                </div>
+
+                <div class="invitation-actions">
+                  <wp-status-pill
+                    [label]="formatLabel(invitation.status)"
+                    [tone]="invitationTone(invitation.status)"
+                  />
+
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="copyInviteLink(invitation)"
+                  >
+                    {{
+                      copiedInvitationId === invitation.invitationId
+                        ? 'Copied'
+                        : 'Copy link'
+                    }}
+                  </button>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
     }
   }
 </wp-section-panel>
