@@ -1,0 +1,47 @@
+<wp-page-header
+  eyebrow="Account"
+  title="Your account"
+  description="View your Waypoint account and organisation details."
+/>
+
+@if (viewState$ | async; as vm) {
+  @if (vm.status === 'loading') {
+    <wp-loading-state message="Loading account..." />
+  }
+
+  @if (vm.status === 'error') {
+    <wp-error-state
+      title="Could not load account"
+      message="Please refresh the page or try again later."
+    />
+  }
+
+  @if (vm.status === 'success') {
+    <wp-section-panel
+      title="Account details"
+      description="Your current Waypoint profile."
+    >
+      <dl class="account-details">
+        <div>
+          <dt>Email</dt>
+          <dd>{{ vm.data.email }}</dd>
+        </div>
+
+        <div>
+          <dt>Organisation</dt>
+          <dd>{{ vm.data.organisationName }}</dd>
+        </div>
+
+        <div>
+          <dt>Plan</dt>
+          <dd>{{ vm.data.plan }}</dd>
+        </div>
+
+        <div>
+          <dt>User ID</dt>
+          <dd>{{ vm.data.userId }}</dd>
+        </div>
+      </dl>
+    </wp-section-panel>
+  }
+}

@@ -53,6 +53,13 @@ export const shellRoutes: Routes = [
             (m) => m.featureComplianceRoutes,
           ),
       },
+      {
+        path: 'account',
+        loadChildren: () =>
+          import('@waypoint-ui/feature-account').then(
+            (m) => m.featureAccountRoutes,
+          ),
+      },
     ],
   },
 ];

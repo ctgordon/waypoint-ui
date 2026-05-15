@@ -49,6 +49,9 @@
       ],
       "@waypoint-ui/shared-data-access-auth": [
         "./libs/shared/data-access/auth/src/index.ts"
+      ],
+      "@waypoint-ui/feature-account": [
+        "./libs/waypoint-ui/feature-account/src/index.ts"
       ]
     }
   },

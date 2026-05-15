@@ -73,6 +73,11 @@ export class ShellLayoutComponent {
       route: '/app/compliance',
       icon: 'verified',
     },
+    {
+      label: 'Account',
+      route: '/app/account',
+      icon: 'account_circle',
+    },
   ];
 
   logout(): void {
