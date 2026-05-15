@@ -2,7 +2,7 @@
   "name": "feature-auth",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/waypoint-ui/feature-auth/src",
-  "prefix": "lib",
+  "prefix": "wp",
   "projectType": "library",
   "tags": ["type:feature", "scope:waypoint-ui"],
   "targets": {

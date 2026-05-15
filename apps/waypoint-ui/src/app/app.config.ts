@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
       authorizationParams: {
         redirect_uri: `${window.location.origin}/callback`,
         audience: environment.auth0.audience,
+        scope: 'openid profile email',
       },
     }),
     provideHttpClient(withInterceptors([authInterceptor])),

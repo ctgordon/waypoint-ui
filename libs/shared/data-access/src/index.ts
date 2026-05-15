@@ -5,3 +5,4 @@ export * from './lib/maintenance-api.service';
 export * from './lib/documents-api.service';
 export * from './lib/compliance-api.service';
 export * from './lib/api-view-state';
+export * from './lib/account-api.service';
