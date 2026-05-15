@@ -1,0 +1,52 @@
+<section class="invite-page">
+  <mat-card>
+    <mat-card-content>
+      @if (invitation$ | async; as vm) {
+        @if (vm.status === 'loading') {
+          <p>Checking invitation...</p>
+        }
+
+        @if (vm.status === 'error') {
+          <h1>Invitation unavailable</h1>
+          <p>This invite may be invalid, expired, or already used.</p>
+        }
+
+        @if (vm.status === 'success') {
+          <h1>You’ve been invited to Waypoint</h1>
+
+          <p>
+            Invitation for <strong>{{ vm.data.email }}</strong>
+          </p>
+
+          <p>
+            Role: <strong>{{ vm.data.role }}</strong>
+          </p>
+
+          <p>
+            Expires {{ vm.data.expiresAt | date: 'mediumDate' }}
+          </p>
+
+          @if (isAuthenticated$ | async) {
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="acceptInvite()"
+            >
+              Accept invitation
+            </button>
+          } @else {
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="signIn()"
+            >
+              Sign in to accept
+            </button>
+          }
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

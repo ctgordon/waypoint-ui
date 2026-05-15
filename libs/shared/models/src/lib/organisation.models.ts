@@ -22,3 +22,14 @@ export interface CreateOrganisationInvitationRequest {
   email: string;
   role: string;
 }
+
+export interface OrganisationInvitationSummary {
+  invitationId: string;
+  organisationId: string;
+  email: string;
+  role: string;
+  token: string;
+  status: string;
+  createdAt: string;
+  expiresAt: string;
+}

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import {
+  AccountSummary,
   CreateOrganisationInvitationRequest,
   OrganisationInvitationSummary,
   OrganisationMemberSummary,
@@ -34,6 +35,19 @@ export class OrganisationApiService {
     return this.http.post<OrganisationInvitationSummary>(
       joinUrl(this.config.apiBaseUrl, '/v1/organisations/current/invitations'),
       request,
+    );
+  }
+
+  getInvitation(token: string): Observable<OrganisationInvitationSummary> {
+    return this.http.get<OrganisationInvitationSummary>(
+      joinUrl(this.config.apiBaseUrl, `/v1/invitations/${token}`),
+    );
+  }
+
+  acceptInvitation(token: string): Observable<AccountSummary> {
+    return this.http.post<AccountSummary>(
+      joinUrl(this.config.apiBaseUrl, `/v1/invitations/${token}/accept`),
+      {},
     );
   }
 }

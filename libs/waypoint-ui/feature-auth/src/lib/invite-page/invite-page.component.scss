@@ -1,0 +1,17 @@
+.invite-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+
+  padding: 2rem;
+
+  background: var(--wp-bg);
+
+  mat-card {
+    width: min(100%, 32rem);
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+}
