@@ -38,4 +38,23 @@ export class DocumentsApiService {
       joinUrl(this.config.apiBaseUrl, '/v1/documents'),
     );
   }
+
+  uploadDocumentFile(documentId: string, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<void>(
+      joinUrl(this.config.apiBaseUrl, `/v1/documents/${documentId}/file`),
+      formData,
+    );
+  }
+
+  downloadDocumentFile(documentId: string): Observable<Blob> {
+    return this.http.get(
+      joinUrl(this.config.apiBaseUrl, `/v1/documents/${documentId}/download`),
+      {
+        responseType: 'blob',
+      },
+    );
+  }
 }

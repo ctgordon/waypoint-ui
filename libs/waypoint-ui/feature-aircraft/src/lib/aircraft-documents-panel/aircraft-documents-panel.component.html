@@ -72,6 +72,44 @@
                 </div>
               </div>
 
+              @if (document.fileName) {
+                <div class="document-item__file">
+                  <div>
+                    <strong>{{ document.fileName }}</strong>
+
+                    @if (document.sizeBytes) {
+                      <small>
+                        {{ formatFileSize(document.sizeBytes) }}
+                      </small>
+                    }
+                  </div>
+
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="downloadFile(document.documentId, document.fileName)"
+                  >
+                    Download
+                  </button>
+                </div>
+              } @else {
+                <div class="document-item__file">
+                  <span class="document-item__file-empty">
+                    No file attached
+                  </span>
+
+                  <label class="upload-button">
+                    Upload file
+
+                    <input
+                      type="file"
+                      hidden
+                      (change)="uploadFile(document.documentId, $event)"
+                    />
+                  </label>
+                </div>
+              }
+
               @if (document.notes) {
                 <p class="document-item__notes">
                   {{ document.notes }}

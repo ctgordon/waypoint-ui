@@ -51,3 +51,58 @@
 
   color: var(--wp-muted);
 }
+
+.document-item__file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+
+  border-top: 1px solid var(--wp-border);
+
+  strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  small {
+    display: inline-block;
+    margin-top: 0.25rem;
+    color: var(--wp-muted);
+  }
+}
+
+.document-item__file-empty {
+  color: var(--wp-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 2.25rem;
+  padding: 0 1rem;
+
+  border: 1px solid var(--wp-border);
+  border-radius: 999px;
+
+  background: var(--wp-surface);
+  cursor: pointer;
+
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .document-item__file {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

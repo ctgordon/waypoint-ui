@@ -9,6 +9,10 @@ export interface AircraftDocumentSummary {
   status: string;
   notes: string | null;
   createdAt: string;
+
+  fileName: string | null;
+  contentType: string | null;
+  sizeBytes: number | null;
 }
 
 export type AircraftDocumentType =
@@ -38,6 +42,10 @@ export interface CreatedDocumentResponse {
   status: string;
   notes: string | null;
   createdAt: string;
+
+  fileName: string | null;
+  contentType: string | null;
+  sizeBytes: number | null;
 }
 
 export interface FleetDocumentSummary {
@@ -52,4 +60,8 @@ export interface FleetDocumentSummary {
   status: string;
   notes: string | null;
   createdAt: string;
+
+  fileName: string | null;
+  contentType: string | null;
+  sizeBytes: number | null;
 }

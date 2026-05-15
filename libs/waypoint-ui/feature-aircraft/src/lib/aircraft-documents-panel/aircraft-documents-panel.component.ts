@@ -1,23 +1,22 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { BehaviorSubject, switchMap } from 'rxjs';
+
+import { MatButtonModule } from '@angular/material/button';
 
 import {
-  ApiViewState,
   DocumentsApiService,
   toApiViewState,
 } from '@waypoint-ui/shared-data-access';
-import { AircraftDocumentSummary } from '@waypoint-ui/shared-models';
 import {
+  StatusPillComponent,
   EmptyStateComponent,
   ErrorStateComponent,
   LoadingStateComponent,
   SectionPanelComponent,
-  StatusPillComponent,
   WaypointStatusTone,
 } from '@waypoint-ui/shared-ui';
-import { RouterLink } from '@angular/router';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'wp-aircraft-documents-panel',
@@ -25,38 +24,70 @@ import { MatButton } from '@angular/material/button';
   imports: [
     AsyncPipe,
     DatePipe,
+    RouterLink,
+    MatButtonModule,
     EmptyStateComponent,
     ErrorStateComponent,
     LoadingStateComponent,
     SectionPanelComponent,
     StatusPillComponent,
-    RouterLink,
-    MatButton,
   ],
   templateUrl: './aircraft-documents-panel.component.html',
   styleUrl: './aircraft-documents-panel.component.scss',
 })
 export class AircraftDocumentsPanelComponent {
   private readonly documentsApi = inject(DocumentsApiService);
-
-  viewState$: Observable<ApiViewState<AircraftDocumentSummary[]>> =
-    toApiViewState(of([]));
+  private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   aircraftIdValue = '';
 
   @Input({ required: true })
   set aircraftId(value: string) {
     this.aircraftIdValue = value;
+    this.refresh$.next();
+  }
 
-    this.viewState$ = toApiViewState(
-      value ? this.documentsApi.listForAircraft(value) : of([]),
-    );
+  readonly viewState$ = toApiViewState(
+    this.refresh$.pipe(
+      switchMap(() =>
+        this.documentsApi.listForAircraft(this.aircraftIdValue),
+      ),
+    ),
+  );
+
+  uploadFile(documentId: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.documentsApi.uploadDocumentFile(documentId, file).subscribe({
+      next: () => {
+        input.value = '';
+        this.refresh$.next();
+      },
+    });
+  }
+
+  downloadFile(documentId: string, fileName: string | null): void {
+    this.documentsApi.downloadDocumentFile(documentId).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+
+      anchor.href = url;
+      anchor.download = fileName ?? 'document';
+      anchor.click();
+
+      window.URL.revokeObjectURL(url);
+    });
   }
 
   statusTone(status: string): WaypointStatusTone {
     switch (status) {
-      case 'ACTIVE':
       case 'VALID':
+      case 'ACTIVE':
         return 'success';
       case 'EXPIRING_SOON':
         return 'attention';
@@ -97,5 +128,15 @@ export class AircraftDocumentsPanelComponent {
 
   formatLabel(value: string): string {
     return value.replace(/_/g, ' ');
+  }
+
+  formatFileSize(sizeBytes: number | null): string {
+    if (!sizeBytes) return '';
+
+    if (sizeBytes < 1024 * 1024) {
+      return `${Math.round(sizeBytes / 1024)} KB`;
+    }
+
+    return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 }
