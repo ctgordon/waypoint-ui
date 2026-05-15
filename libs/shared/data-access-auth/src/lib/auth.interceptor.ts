@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { from, switchMap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
-import { APP_CONFIG } from '@waypoint-ui/shared-util-config';
+import { APP_CONFIG } from 'libs/shared/util-config/src';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);

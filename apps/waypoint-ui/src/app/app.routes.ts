@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
 import { AuthCallbackPageComponent } from './auth-call-back-page.component';
-import {
-  OnboardingPageComponent
-} from '../../../../libs/waypoint-ui/feature-auth/src/lib/onboarding-page/onboarding-page.component';
 
 export const appRoutes: Routes = [
   {
