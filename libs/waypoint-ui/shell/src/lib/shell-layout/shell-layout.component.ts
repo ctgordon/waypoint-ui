@@ -78,6 +78,11 @@ export class ShellLayoutComponent {
       route: '/app/account',
       icon: 'account_circle',
     },
+    {
+      label: 'Team',
+      route: '/app/account/team',
+      icon: 'groups',
+    },
   ];
 
   logout(): void {

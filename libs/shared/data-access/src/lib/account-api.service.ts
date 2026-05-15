@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {
   AccountSummary,
   CreateAccountRequest,
+  OrganisationMemberSummary,
 } from '@waypoint-ui/shared-models';
 import { APP_CONFIG, joinUrl } from '@waypoint-ui/shared-util-config';
 
@@ -25,6 +26,12 @@ export class AccountApiService {
     return this.http.post<AccountSummary>(
       joinUrl(this.config.apiBaseUrl, '/v1/onboarding/account'),
       request,
+    );
+  }
+
+  getOrganisationMembers(): Observable<OrganisationMemberSummary[]> {
+    return this.http.get<OrganisationMemberSummary[]>(
+      joinUrl(this.config.apiBaseUrl, '/v1/organisations/current/members'),
     );
   }
 }

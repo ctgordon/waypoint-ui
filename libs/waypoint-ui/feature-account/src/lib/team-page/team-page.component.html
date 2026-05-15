@@ -1,0 +1,64 @@
+<wp-page-header
+  eyebrow="Account"
+  title="Team"
+  description="Manage the people who belong to your organisation."
+/>
+
+<wp-section-panel
+  title="Organisation members"
+  description="Users currently attached to this organisation."
+>
+  <button
+    panel-actions
+    mat-stroked-button
+    type="button"
+    disabled
+  >
+    Invite member
+  </button>
+
+  @if (viewState$ | async; as vm) {
+    @if (vm.status === 'loading') {
+      <wp-loading-state message="Loading team members..." />
+    }
+
+    @if (vm.status === 'error') {
+      <wp-error-state
+        title="Could not load team"
+        message="Please refresh the page or try again later."
+      />
+    }
+
+    @if (vm.status === 'success') {
+      @if (vm.data.length === 0) {
+        <wp-empty-state
+          icon="groups"
+          title="No team members"
+          message="No members have been added to this organisation yet."
+        />
+      }
+
+      @if (vm.data.length > 0) {
+        <div class="team-list">
+          @for (member of vm.data; track member.membershipId) {
+            <article class="team-member">
+              <div>
+                <h3>{{ member.email }}</h3>
+                <p>User ID: {{ member.userId }}</p>
+
+                <small>
+                  Joined {{ member.createdAt | date: 'mediumDate' }}
+                </small>
+              </div>
+
+              <wp-status-pill
+                [label]="formatLabel(member.role)"
+                [tone]="roleTone(member.role)"
+              />
+            </article>
+          }
+        </div>
+      }
+    }
+  }
+</wp-section-panel>
