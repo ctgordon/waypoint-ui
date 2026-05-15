@@ -45,9 +45,23 @@
 
       <span class="spacer"></span>
 
-      <span class="org-pill">
-        Waypoint Aviation Ltd
-      </span>
+      @if (account$ | async; as account) {
+        <span class="org-pill">
+          {{ account.organisationName }}
+        </span>
+
+        <span class="account-pill">
+          {{ account.email }}
+        </span>
+      }
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="logout()"
+      >
+        Logout
+      </button>
     </mat-toolbar>
 
     <main class="waypoint-shell__content">

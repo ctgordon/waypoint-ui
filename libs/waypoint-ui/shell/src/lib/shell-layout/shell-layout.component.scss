@@ -75,17 +75,41 @@
   flex: 1;
 }
 
-.org-pill {
-  padding: 0.35rem 0.75rem;
+.org-pill,
+.account-pill {
+  display: inline-flex;
+  align-items: center;
 
+  min-height: 2rem;
+  margin-left: 0.75rem;
+  padding: 0 0.75rem;
+
+  border: 1px solid var(--wp-border);
   border-radius: 999px;
 
-  background: var(--wp-primary-soft);
+  background: var(--wp-surface);
 
-  color: var(--wp-primary);
+  color: var(--wp-muted);
 
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+.org-pill {
+  background: var(--wp-primary-soft);
+  color: var(--wp-primary);
+}
+
+.account-pill {
+  max-width: 16rem;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+button[mat-stroked-button] {
+  margin-left: 0.75rem;
 }
 
 .active-link {

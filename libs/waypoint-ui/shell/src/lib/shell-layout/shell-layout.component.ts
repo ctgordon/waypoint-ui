@@ -1,10 +1,16 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
+import { AuthService } from '@auth0/auth0-angular';
+
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+
+import { AccountApiService } from '@waypoint-ui/shared-data-access';
 
 interface NavItem {
   label: string;
@@ -16,10 +22,12 @@ interface NavItem {
   selector: 'lib-shell-layout',
   standalone: true,
   imports: [
+    AsyncPipe,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
 
+    MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
@@ -29,6 +37,11 @@ interface NavItem {
   styleUrls: ['./shell-layout.component.scss'],
 })
 export class ShellLayoutComponent {
+  private readonly auth = inject(AuthService);
+  private readonly accountApi = inject(AccountApiService);
+
+  readonly account$ = this.accountApi.getMe();
+
   readonly navItems: NavItem[] = [
     {
       label: 'Dashboard',
@@ -61,4 +74,12 @@ export class ShellLayoutComponent {
       icon: 'verified',
     },
   ];
+
+  logout(): void {
+    this.auth.logout({
+      logoutParams: {
+        returnTo: `${window.location.origin}/login`,
+      },
+    });
+  }
 }
